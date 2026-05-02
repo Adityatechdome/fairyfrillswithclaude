@@ -1,0 +1,468 @@
+<!-- ========================================
+     SHOPIFY LIQUID INTEGRATION FOR A+ CONTENT
+     Add this to your product.liquid template
+     ======================================== -->
+
+<!-- Place this where you want A+ content to appear (usually after product description) -->
+
+<div class="product-aplus-content">
+  
+  {% comment %} 
+    METHOD 1: Using Metafields (Recommended)
+    First, create metafields in Shopify:
+    Settings → Custom Data → Products → Add definition
+  {% endcomment %}
+  
+  {% if product.metafields.custom.aplus_enabled %}
+    
+    <!-- MODULE 1: Brand Story Header -->
+    {% if product.metafields.custom.brand_story_title %}
+    <div class="aplus-brand-story">
+      {% if product.metafields.custom.brand_logo %}
+        <img src="{{ product.metafields.custom.brand_logo | img_url: '200x' }}" 
+             alt="{{ shop.name }} Logo" 
+             class="aplus-brand-logo">
+      {% endif %}
+      <h1>{{ product.metafields.custom.brand_story_title }}</h1>
+      <p>{{ product.metafields.custom.brand_story_text }}</p>
+    </div>
+    {% endif %}
+
+    <!-- MODULE 2: Comparison Chart -->
+    {% if product.metafields.custom.comparison_enabled %}
+    <div class="aplus-comparison">
+      <h2>Compare Our Models</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            {% for variant in product.variants limit: 3 %}
+            <th>{{ variant.title }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Price</strong></td>
+            {% for variant in product.variants limit: 3 %}
+            <td>{{ variant.price | money }}</td>
+            {% endfor %}
+          </tr>
+          <!-- Add more comparison rows using metafields -->
+          {% assign comparison_data = product.metafields.custom.comparison_features | split: '||' %}
+          {% for feature in comparison_data %}
+            {% assign feature_parts = feature | split: '|' %}
+            <tr>
+              <td><strong>{{ feature_parts[0] }}</strong></td>
+              {% assign values = feature_parts[1] | split: ',' %}
+              {% for value in values %}
+                <td>
+                  {% if value == 'yes' %}
+                    <span class="checkmark">✓</span>
+                  {% elsif value == 'no' %}
+                    <span class="crossmark">✗</span>
+                  {% else %}
+                    {{ value }}
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- MODULE 3: Four Quadrant Feature Grid -->
+    {% if product.metafields.custom.features_grid %}
+    <div class="aplus-four-quadrant">
+      {% assign features = product.metafields.custom.features_grid.value %}
+      {% for feature in features limit: 4 %}
+      <div class="quadrant-item">
+        {% if feature.image %}
+        <img src="{{ feature.image | img_url: '600x' }}" alt="{{ feature.title }}">
+        {% endif %}
+        <div class="quadrant-content">
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- MODULE 4: Image with Text Sidebar -->
+    {% if product.metafields.custom.lifestyle_image %}
+    <div class="aplus-image-text">
+      <img src="{{ product.metafields.custom.lifestyle_image | img_url: '1000x' }}" 
+           alt="Lifestyle Image">
+      <div class="aplus-text-content">
+        <h2>{{ product.metafields.custom.why_choose_title | default: "Why Choose Our Product?" }}</h2>
+        <p>{{ product.metafields.custom.why_choose_description }}</p>
+        {% if product.metafields.custom.key_benefits %}
+        <ul>
+          {% assign benefits = product.metafields.custom.key_benefits | split: '||' %}
+          {% for benefit in benefits %}
+          <li>{{ benefit }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- MODULE 5: Features Grid with Icons -->
+    {% if product.metafields.custom.icon_features %}
+    <div class="aplus-features-grid">
+      {% assign icon_features = product.metafields.custom.icon_features.value %}
+      {% for feature in icon_features limit: 6 %}
+      <div class="feature-box">
+        <div class="feature-icon">{{ feature.icon | default: "⭐" }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- MODULE 6: Full Width Banner -->
+    {% if product.metafields.custom.banner_image %}
+    <div class="aplus-banner">
+      <img src="{{ product.metafields.custom.banner_image | img_url: '1600x' }}" 
+           alt="Banner">
+      <div class="aplus-banner-overlay">
+        <h2>{{ product.metafields.custom.banner_title }}</h2>
+        <p>{{ product.metafields.custom.banner_text }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- MODULE 7: Technical Specifications -->
+    {% if product.metafields.custom.specifications %}
+    <div class="aplus-specifications">
+      <h2>Technical Specifications</h2>
+      <div class="specs-grid">
+        {% assign specs = product.metafields.custom.specifications | split: '||' %}
+        {% for spec in specs %}
+          {% assign spec_parts = spec | split: ':' %}
+          <div class="spec-item">
+            <div class="spec-label">{{ spec_parts[0] }}:</div>
+            <div class="spec-value">{{ spec_parts[1] }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- MODULE 8: Image Gallery -->
+    {% if product.metafields.custom.gallery_images %}
+    <div class="aplus-gallery">
+      {% assign gallery = product.metafields.custom.gallery_images.value %}
+      {% for item in gallery limit: 4 %}
+      <div class="gallery-item">
+        <img src="{{ item.image | img_url: '400x' }}" alt="{{ item.caption }}">
+        <div class="gallery-caption">{{ item.caption }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  {% endif %}
+
+</div>
+
+<!-- Include the CSS (add to your theme.css or in a <style> tag) -->
+<style>
+/* Copy all CSS from aplus-content-template.html */
+</style>
+
+
+<!-- ========================================
+     ALTERNATIVE METHOD: Using Shopify Sections
+     Create a new section file: sections/product-aplus.liquid
+     ======================================== -->
+
+{% schema %}
+{
+  "name": "Product A+ Content",
+  "tag": "section",
+  "class": "product-aplus-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_aplus",
+      "label": "Enable A+ Content",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Brand Story"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand Logo"
+    },
+    {
+      "type": "text",
+      "id": "brand_story_title",
+      "label": "Brand Story Title",
+      "default": "Premium Quality, Trusted by Thousands"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_story_text",
+      "label": "Brand Story Text"
+    },
+    {
+      "type": "header",
+      "content": "Lifestyle Image & Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "lifestyle_image",
+      "label": "Lifestyle Image"
+    },
+    {
+      "type": "text",
+      "id": "why_choose_title",
+      "label": "Section Title",
+      "default": "Why Choose Our Product?"
+    },
+    {
+      "type": "textarea",
+      "id": "why_choose_text",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title"
+    },
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner Text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_quadrant",
+      "name": "Feature Quadrant",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "feature_image",
+          "label": "Feature Image"
+        },
+        {
+          "type": "text",
+          "id": "feature_title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "feature_description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "icon_feature",
+      "name": "Icon Feature",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon Emoji",
+          "default": "⭐"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "specification",
+      "name": "Specification",
+      "settings": [
+        {
+          "type": "text",
+          "id": "spec_label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "spec_value",
+          "label": "Value"
+        }
+      ]
+    },
+    {
+      "type": "gallery_item",
+      "name": "Gallery Item",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "gallery_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "gallery_caption",
+          "label": "Caption"
+        }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Key Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "benefit_text",
+          "label": "Benefit Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product A+ Content"
+    }
+  ]
+}
+{% endschema %}
+
+<!-- Render the section content -->
+{% if section.settings.enable_aplus %}
+<div class="aplus-container">
+  
+  <!-- Brand Story -->
+  {% if section.settings.brand_story_title != blank %}
+  <div class="aplus-brand-story">
+    {% if section.settings.brand_logo %}
+      <img src="{{ section.settings.brand_logo | img_url: '200x' }}" 
+           alt="Brand Logo" 
+           class="aplus-brand-logo">
+    {% endif %}
+    <h1>{{ section.settings.brand_story_title }}</h1>
+    <p>{{ section.settings.brand_story_text }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Feature Quadrants -->
+  {% assign quadrants = section.blocks | where: "type", "feature_quadrant" %}
+  {% if quadrants.size > 0 %}
+  <div class="aplus-four-quadrant">
+    {% for block in quadrants %}
+    <div class="quadrant-item" {{ block.shopify_attributes }}>
+      {% if block.settings.feature_image %}
+      <img src="{{ block.settings.feature_image | img_url: '600x' }}" 
+           alt="{{ block.settings.feature_title }}">
+      {% endif %}
+      <div class="quadrant-content">
+        <h3>{{ block.settings.feature_title }}</h3>
+        <p>{{ block.settings.feature_description }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Lifestyle Image with Text -->
+  {% if section.settings.lifestyle_image %}
+  <div class="aplus-image-text">
+    <img src="{{ section.settings.lifestyle_image | img_url: '1000x' }}" 
+         alt="Lifestyle Image">
+    <div class="aplus-text-content">
+      <h2>{{ section.settings.why_choose_title }}</h2>
+      <p>{{ section.settings.why_choose_text }}</p>
+      {% assign benefits = section.blocks | where: "type", "benefit" %}
+      {% if benefits.size > 0 %}
+      <ul>
+        {% for block in benefits %}
+        <li {{ block.shopify_attributes }}>{{ block.settings.benefit_text }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Icon Features Grid -->
+  {% assign icon_features = section.blocks | where: "type", "icon_feature" %}
+  {% if icon_features.size > 0 %}
+  <div class="aplus-features-grid">
+    {% for block in icon_features %}
+    <div class="feature-box" {{ block.shopify_attributes }}>
+      <div class="feature-icon">{{ block.settings.icon }}</div>
+      <h3>{{ block.settings.title }}</h3>
+      <p>{{ block.settings.description }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Banner -->
+  {% if section.settings.banner_image %}
+  <div class="aplus-banner">
+    <img src="{{ section.settings.banner_image | img_url: '1600x' }}" alt="Banner">
+    <div class="aplus-banner-overlay">
+      <h2>{{ section.settings.banner_title }}</h2>
+      <p>{{ section.settings.banner_text }}</p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Specifications -->
+  {% assign specs = section.blocks | where: "type", "specification" %}
+  {% if specs.size > 0 %}
+  <div class="aplus-specifications">
+    <h2>Technical Specifications</h2>
+    <div class="specs-grid">
+      {% for block in specs %}
+      <div class="spec-item" {{ block.shopify_attributes }}>
+        <div class="spec-label">{{ block.settings.spec_label }}:</div>
+        <div class="spec-value">{{ block.settings.spec_value }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Gallery -->
+  {% assign gallery = section.blocks | where: "type", "gallery_item" %}
+  {% if gallery.size > 0 %}
+  <div class="aplus-gallery">
+    {% for block in gallery %}
+    <div class="gallery-item" {{ block.shopify_attributes }}>
+      <img src="{{ block.settings.gallery_image | img_url: '400x' }}" 
+           alt="{{ block.settings.gallery_caption }}">
+      <div class="gallery-caption">{{ block.settings.gallery_caption }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endif %}

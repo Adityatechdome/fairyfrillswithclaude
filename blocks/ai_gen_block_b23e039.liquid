@@ -1,0 +1,470 @@
+{% doc %}
+  @prompt
+    Create a "Add a Personalized Fairy Tale Story" feature on the product page. Add a checkbox above the Add to Cart button labeled "Add a Personalized Fairy Tale Story ✨". When the checkbox is checked, smoothly reveal a form with the following fields using line item properties: Child Name (text input, name="properties[Child Name]"), Age (text input, name="properties[Age]"), Occasion (text input, name="properties[Occasion]"), and a hidden field (name="properties[Fairy Tale Story]" value="Yes"). When unchecked, hide the fields and clear the values so they are not submitted. The form should be styled to match the theme, be fully responsive on all screen sizes, and work natively with Shopify line item properties so the data is saved with the order and displays in the cart and order notes. No checkout modifications required.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-fairy-tale-container-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .ai-fairy-tale-checkbox-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+
+  .ai-fairy-tale-checkbox-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: {{ block.settings.checkbox_color }};
+  }
+
+  .ai-fairy-tale-checkbox-label-{{ ai_gen_id }} {
+    font-size: {{ block.settings.label_font_size }}px;
+    color: {{ block.settings.label_color }};
+    cursor: pointer;
+    user-select: none;
+    margin: 0;
+  }
+
+  .ai-fairy-tale-form-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    margin-top: 0;
+  }
+
+  .ai-fairy-tale-form-{{ ai_gen_id }}.active {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 16px;
+  }
+
+  .ai-fairy-tale-form-content-{{ ai_gen_id }} {
+    background-color: {{ block.settings.form_background }};
+    border: {{ block.settings.form_border_width }}px solid {{ block.settings.form_border_color }};
+    border-radius: {{ block.settings.form_border_radius }}px;
+    padding: {{ block.settings.form_padding }}px;
+  }
+
+  .ai-fairy-tale-form-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.form_title_size }}px;
+    color: {{ block.settings.form_title_color }};
+    margin: 0 0 16px 0;
+    font-weight: 600;
+  }
+
+  .ai-fairy-tale-field-{{ ai_gen_id }} {
+    margin-bottom: 16px;
+  }
+
+  .ai-fairy-tale-field-{{ ai_gen_id }}:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-fairy-tale-field-label-{{ ai_gen_id }} {
+    display: block;
+    font-size: {{ block.settings.field_label_size }}px;
+    color: {{ block.settings.field_label_color }};
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .ai-fairy-tale-field-input-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: {{ block.settings.input_font_size }}px;
+    color: {{ block.settings.input_text_color }};
+    background-color: {{ block.settings.input_background }};
+    border: {{ block.settings.input_border_width }}px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .ai-fairy-tale-field-input-{{ ai_gen_id }}:focus {
+    outline: none;
+    border-color: {{ block.settings.input_focus_border_color }};
+    background-color: {{ block.settings.input_focus_background }};
+  }
+
+  .ai-fairy-tale-field-input-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.placeholder_color }};
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-fairy-tale-checkbox-label-{{ ai_gen_id }} {
+      font-size: {{ block.settings.label_font_size | times: 0.9 }}px;
+    }
+
+    .ai-fairy-tale-form-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.form_title_size | times: 0.9 }}px;
+    }
+
+    .ai-fairy-tale-form-content-{{ ai_gen_id }} {
+      padding: {{ block.settings.form_padding | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<fairy-tale-form-{{ ai_gen_id }} class="ai-fairy-tale-container-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-fairy-tale-checkbox-wrapper-{{ ai_gen_id }}">
+    <input
+      type="checkbox"
+      id="ai-fairy-tale-checkbox-{{ ai_gen_id }}"
+      class="ai-fairy-tale-checkbox-{{ ai_gen_id }}"
+      aria-controls="ai-fairy-tale-form-{{ ai_gen_id }}"
+      aria-expanded="false"
+    >
+    <label for="ai-fairy-tale-checkbox-{{ ai_gen_id }}" class="ai-fairy-tale-checkbox-label-{{ ai_gen_id }}">
+      {{ block.settings.checkbox_label }}
+    </label>
+  </div>
+
+  <div id="ai-fairy-tale-form-{{ ai_gen_id }}" class="ai-fairy-tale-form-{{ ai_gen_id }}">
+    <div class="ai-fairy-tale-form-content-{{ ai_gen_id }}">
+      <h3 class="ai-fairy-tale-form-title-{{ ai_gen_id }}">{{ block.settings.form_title }}</h3>
+
+      <div class="ai-fairy-tale-field-{{ ai_gen_id }}">
+        <label for="ai-fairy-tale-child-name-{{ ai_gen_id }}" class="ai-fairy-tale-field-label-{{ ai_gen_id }}">
+          {{ block.settings.child_name_label }}
+        </label>
+        <input
+          type="text"
+          id="ai-fairy-tale-child-name-{{ ai_gen_id }}"
+          name="properties[Child Name]"
+          class="ai-fairy-tale-field-input-{{ ai_gen_id }}"
+          placeholder="{{ block.settings.child_name_placeholder }}"
+          disabled
+        >
+      </div>
+
+      <div class="ai-fairy-tale-field-{{ ai_gen_id }}">
+        <label for="ai-fairy-tale-age-{{ ai_gen_id }}" class="ai-fairy-tale-field-label-{{ ai_gen_id }}">
+          {{ block.settings.age_label }}
+        </label>
+        <input
+          type="text"
+          id="ai-fairy-tale-age-{{ ai_gen_id }}"
+          name="properties[Age]"
+          class="ai-fairy-tale-field-input-{{ ai_gen_id }}"
+          placeholder="{{ block.settings.age_placeholder }}"
+          disabled
+        >
+      </div>
+
+      <div class="ai-fairy-tale-field-{{ ai_gen_id }}">
+        <label for="ai-fairy-tale-occasion-{{ ai_gen_id }}" class="ai-fairy-tale-field-label-{{ ai_gen_id }}">
+          {{ block.settings.occasion_label }}
+        </label>
+        <input
+          type="text"
+          id="ai-fairy-tale-occasion-{{ ai_gen_id }}"
+          name="properties[Occasion]"
+          class="ai-fairy-tale-field-input-{{ ai_gen_id }}"
+          placeholder="{{ block.settings.occasion_placeholder }}"
+          disabled
+        >
+      </div>
+
+      <input
+        type="hidden"
+        id="ai-fairy-tale-hidden-{{ ai_gen_id }}"
+        name="properties[Fairy Tale Story]"
+        value=""
+        disabled
+      >
+    </div>
+  </div>
+</fairy-tale-form-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FairyTaleForm{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.checkbox = this.querySelector('#ai-fairy-tale-checkbox-{{ ai_gen_id }}');
+        this.formContainer = this.querySelector('#ai-fairy-tale-form-{{ ai_gen_id }}');
+        this.inputs = this.querySelectorAll('.ai-fairy-tale-field-input-{{ ai_gen_id }}');
+        this.hiddenInput = this.querySelector('#ai-fairy-tale-hidden-{{ ai_gen_id }}');
+
+        this.checkbox.addEventListener('change', this.handleCheckboxChange.bind(this));
+      }
+
+      handleCheckboxChange() {
+        const isChecked = this.checkbox.checked;
+
+        if (isChecked) {
+          this.formContainer.classList.add('active');
+          this.checkbox.setAttribute('aria-expanded', 'true');
+          this.inputs.forEach(input => input.disabled = false);
+          this.hiddenInput.disabled = false;
+          this.hiddenInput.value = 'Yes';
+        } else {
+          this.formContainer.classList.remove('active');
+          this.checkbox.setAttribute('aria-expanded', 'false');
+          this.inputs.forEach(input => {
+            input.disabled = true;
+            input.value = '';
+          });
+          this.hiddenInput.disabled = true;
+          this.hiddenInput.value = '';
+        }
+      }
+    }
+
+    customElements.define('fairy-tale-form-{{ ai_gen_id }}', FairyTaleForm{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Personalized fairy tale",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Checkbox"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "checkbox_label",
+      "label": "Checkbox label",
+      "default": "Add a Personalized Fairy Tale Story ✨"
+    },
+    {
+      "type": "range",
+      "id": "label_font_size",
+      "label": "Label font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "color",
+      "id": "checkbox_color",
+      "label": "Checkbox color",
+      "default": "#c2185b"
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "form_title",
+      "label": "Form title",
+      "default": "Personalization details"
+    },
+    {
+      "type": "range",
+      "id": "form_title_size",
+      "label": "Title font size",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "form_title_color",
+      "label": "Title color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "color",
+      "id": "form_background",
+      "label": "Background",
+      "default": "#fef9fb"
+    },
+    {
+      "type": "color",
+      "id": "form_border_color",
+      "label": "Border color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "form_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "form_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "form_padding",
+      "label": "Padding",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Field labels"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "child_name_label",
+      "label": "Child name label",
+      "default": "Child's Name"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "age_label",
+      "label": "Age label",
+      "default": "Age"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "occasion_label",
+      "label": "Occasion label",
+      "default": "Occasion"
+    },
+    {
+      "type": "range",
+      "id": "field_label_size",
+      "label": "Label font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "field_label_color",
+      "label": "Label color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "header",
+      "content": "Input fields"
+    },
+    {
+      "type": "text",
+      "id": "child_name_placeholder",
+      "label": "Child name placeholder",
+      "default": "Enter child's name"
+    },
+    {
+      "type": "text",
+      "id": "age_placeholder",
+      "label": "Age placeholder",
+      "default": "Enter age"
+    },
+    {
+      "type": "text",
+      "id": "occasion_placeholder",
+      "label": "Occasion placeholder",
+      "default": "e.g., Birthday, Christmas"
+    },
+    {
+      "type": "range",
+      "id": "input_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Text color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Border color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "input_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border_color",
+      "label": "Focus border color",
+      "default": "#c2185b"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_background",
+      "label": "Focus background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder color",
+      "default": "#999999"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Personalized fairy tale"
+    }
+  ]
+}
+{% endschema %}

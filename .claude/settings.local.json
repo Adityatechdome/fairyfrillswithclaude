@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"C:\\\\\\\\Users\\\\\\\\AdityaJain\\\\\\\\Desktop\\\\\\\\final theme shopify\\\\\\\\templates\\\\\\\\\")",
+      "Bash(ls -la \"C:\\\\\\\\Users\\\\\\\\AdityaJain\\\\\\\\Desktop\\\\\\\\final theme shopify\\\\\\\\sections\\\\\\\\\")",
+      "Bash(ls -la \"C:\\\\\\\\Users\\\\\\\\AdityaJain\\\\\\\\Desktop\\\\\\\\final theme shopify\\\\\\\\config\\\\\\\\\")",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Initial commit: Add virtual try-on solution with Fash.AI and Cloudinary integration *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
+    ]
+  }
+}

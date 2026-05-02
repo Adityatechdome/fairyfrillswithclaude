@@ -1,0 +1,908 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify section called "Kids Virtual Try-On".
+    
+    Layout:
+    - Two column responsive layout (50/50 on desktop, stacked on mobile)
+    
+    LEFT COLUMN:
+    - Heading: "Upload Kids Photo"
+    - Subtext: "Clear front-facing photo works best"
+    - Upload box with dashed border
+    - Drag & drop + browse file button
+    - Show image preview after upload
+    - Below it show 3 inline guidelines:
+      ✓ Good lighting  ✓ Center child  ✓ Front-facing
+    
+    RIGHT COLUMN:
+    - Size selection buttons (0-3M to 11-12Y) in pill style
+    - Single select (active state highlighted)
+    - Product multi-select dropdown (searchable)
+    - Selected products shown as tags
+    
+    BOTTOM:
+    - Centered button: "Generate Virtual Try-On"
+    - Disabled until all inputs selected
+    
+    Design:
+    - Clean modern UI
+    - Rounded corners (12px)
+    - Purple accent (#A855F7)
+    - Light gray background (#F9FAFB)
+    - Mobile responsive
+    
+    Functionality:
+    - Image upload with preview
+    - Size selection toggle
+    - Product selection
+    - Enable button only when all fields filled
+    
+    Make it fully responsive and production-ready for Shopify theme editor.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-virtual-tryon-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-virtual-tryon-container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-virtual-tryon-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .ai-virtual-tryon-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .ai-virtual-tryon-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 8px 0;
+    font-weight: 600;
+  }
+
+  .ai-virtual-tryon-subtext-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtext_size }}px;
+    color: {{ block.settings.subtext_color }};
+    margin: 0 0 16px 0;
+  }
+
+  .ai-virtual-tryon-upload-box-{{ ai_gen_id }} {
+    border: 2px dashed {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: {{ block.settings.upload_bg_color }};
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-virtual-tryon-upload-box-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.accent_color }};
+    background-color: {{ block.settings.upload_hover_bg }};
+  }
+
+  .ai-virtual-tryon-upload-box-{{ ai_gen_id }}.has-image {
+    padding: 0;
+    border-style: solid;
+  }
+
+  .ai-virtual-tryon-upload-icon-{{ ai_gen_id }} {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 16px;
+    color: {{ block.settings.accent_color }};
+  }
+
+  .ai-virtual-tryon-upload-text-{{ ai_gen_id }} {
+    font-size: 16px;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 8px;
+  }
+
+  .ai-virtual-tryon-upload-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: {{ block.settings.accent_color }};
+    color: #ffffff;
+    border: none;
+    border-radius: {{ block.settings.button_radius }}px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-virtual-tryon-upload-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.accent_hover_color }};
+  }
+
+  .ai-virtual-tryon-file-input-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-virtual-tryon-preview-{{ ai_gen_id }} {
+    display: none;
+    width: 100%;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-virtual-tryon-preview-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-virtual-tryon-preview-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-virtual-tryon-guidelines-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .ai-virtual-tryon-guideline-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-virtual-tryon-checkmark-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    color: {{ block.settings.success_color }};
+    flex-shrink: 0;
+  }
+
+  .ai-virtual-tryon-size-label-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .ai-virtual-tryon-size-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 12px;
+  }
+
+  .ai-virtual-tryon-size-button-{{ ai_gen_id }} {
+    padding: 12px 16px;
+    background-color: {{ block.settings.size_bg_color }};
+    color: {{ block.settings.text_color }};
+    border: 2px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.button_radius }}px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .ai-virtual-tryon-size-button-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.accent_color }};
+    background-color: {{ block.settings.size_hover_bg }};
+  }
+
+  .ai-virtual-tryon-size-button-{{ ai_gen_id }}.selected {
+    background-color: {{ block.settings.accent_color }};
+    color: #ffffff;
+    border-color: {{ block.settings.accent_color }};
+  }
+
+  .ai-virtual-tryon-product-label-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .ai-virtual-tryon-dropdown-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-virtual-tryon-dropdown-button-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: {{ block.settings.size_bg_color }};
+    color: {{ block.settings.text_color }};
+    border: 2px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.button_radius }}px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .ai-virtual-tryon-dropdown-button-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.accent_color }};
+  }
+
+  .ai-virtual-tryon-dropdown-arrow-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-virtual-tryon-dropdown-button-{{ ai_gen_id }}.open .ai-virtual-tryon-dropdown-arrow-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-virtual-tryon-dropdown-menu-{{ ai_gen_id }} {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 2px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.button_radius }}px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 10;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .ai-virtual-tryon-dropdown-menu-{{ ai_gen_id }}.open {
+    display: block;
+  }
+
+  .ai-virtual-tryon-dropdown-search-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-bottom: 2px solid {{ block.settings.border_color }};
+    font-size: 14px;
+    outline: none;
+  }
+
+  .ai-virtual-tryon-dropdown-item-{{ ai_gen_id }} {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-virtual-tryon-dropdown-item-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.upload_hover_bg }};
+  }
+
+  .ai-virtual-tryon-dropdown-checkbox-{{ ai_gen_id }} {
+    width: 18px;
+    height: 18px;
+    border: 2px solid {{ block.settings.border_color }};
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ai-virtual-tryon-dropdown-item-{{ ai_gen_id }}.selected .ai-virtual-tryon-dropdown-checkbox-{{ ai_gen_id }} {
+    background-color: {{ block.settings.accent_color }};
+    border-color: {{ block.settings.accent_color }};
+  }
+
+  .ai-virtual-tryon-dropdown-checkmark-{{ ai_gen_id }} {
+    width: 12px;
+    height: 12px;
+    color: #ffffff;
+    display: none;
+  }
+
+  .ai-virtual-tryon-dropdown-item-{{ ai_gen_id }}.selected .ai-virtual-tryon-dropdown-checkmark-{{ ai_gen_id }} {
+    display: block;
+  }
+
+  .ai-virtual-tryon-selected-tags-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .ai-virtual-tryon-tag-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: {{ block.settings.accent_color }};
+    color: #ffffff;
+    border-radius: {{ block.settings.button_radius }}px;
+    font-size: 14px;
+  }
+
+  .ai-virtual-tryon-tag-remove-{{ ai_gen_id }} {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    opacity: 0.8;
+  }
+
+  .ai-virtual-tryon-tag-remove-{{ ai_gen_id }}:hover {
+    opacity: 1;
+  }
+
+  .ai-virtual-tryon-submit-container-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-virtual-tryon-submit-button-{{ ai_gen_id }} {
+    padding: 16px 48px;
+    background-color: {{ block.settings.accent_color }};
+    color: #ffffff;
+    border: none;
+    border-radius: {{ block.settings.button_radius }}px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-virtual-tryon-submit-button-{{ ai_gen_id }}:hover:not(:disabled) {
+    background-color: {{ block.settings.accent_hover_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+  }
+
+  .ai-virtual-tryon-submit-button-{{ ai_gen_id }}:disabled {
+    background-color: {{ block.settings.disabled_color }};
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-virtual-tryon-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .ai-virtual-tryon-guidelines-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ai-virtual-tryon-size-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+
+    .ai-virtual-tryon-submit-button-{{ ai_gen_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<kids-virtual-tryon-{{ ai_gen_id }} class="ai-virtual-tryon-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-virtual-tryon-container-{{ ai_gen_id }}">
+    <div class="ai-virtual-tryon-grid-{{ ai_gen_id }}">
+      <div class="ai-virtual-tryon-column-{{ ai_gen_id }}">
+        <div>
+          <h2 class="ai-virtual-tryon-heading-{{ ai_gen_id }}">{{ block.settings.upload_heading }}</h2>
+          <p class="ai-virtual-tryon-subtext-{{ ai_gen_id }}">{{ block.settings.upload_subtext }}</p>
+          
+          <div class="ai-virtual-tryon-upload-box-{{ ai_gen_id }}" data-upload-box>
+            <div data-upload-placeholder>
+              <svg class="ai-virtual-tryon-upload-icon-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              <p class="ai-virtual-tryon-upload-text-{{ ai_gen_id }}">{{ block.settings.drag_drop_text }}</p>
+              <button type="button" class="ai-virtual-tryon-upload-button-{{ ai_gen_id }}" data-browse-button>
+                {{ block.settings.browse_button_text }}
+              </button>
+            </div>
+            <div class="ai-virtual-tryon-preview-{{ ai_gen_id }}" data-preview>
+              <img class="ai-virtual-tryon-preview-image-{{ ai_gen_id }}" data-preview-image alt="Uploaded photo">
+            </div>
+          </div>
+          <input type="file" class="ai-virtual-tryon-file-input-{{ ai_gen_id }}" accept="image/*" data-file-input>
+
+          <div class="ai-virtual-tryon-guidelines-{{ ai_gen_id }}">
+            <div class="ai-virtual-tryon-guideline-{{ ai_gen_id }}">
+              <svg class="ai-virtual-tryon-checkmark-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span>{{ block.settings.guideline_1 }}</span>
+            </div>
+            <div class="ai-virtual-tryon-guideline-{{ ai_gen_id }}">
+              <svg class="ai-virtual-tryon-checkmark-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span>{{ block.settings.guideline_2 }}</span>
+            </div>
+            <div class="ai-virtual-tryon-guideline-{{ ai_gen_id }}">
+              <svg class="ai-virtual-tryon-checkmark-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span>{{ block.settings.guideline_3 }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-virtual-tryon-column-{{ ai_gen_id }}">
+        <div>
+          <label class="ai-virtual-tryon-size-label-{{ ai_gen_id }}">{{ block.settings.size_label }}</label>
+          <div class="ai-virtual-tryon-size-grid-{{ ai_gen_id }}" data-size-grid>
+            {% assign sizes = '0-3M,3-6M,6-9M,9-12M,12-18M,18-24M,2-3Y,3-4Y,4-5Y,5-6Y,6-7Y,7-8Y,8-9Y,9-10Y,10-11Y,11-12Y' | split: ',' %}
+            {% for size in sizes %}
+              <button type="button" class="ai-virtual-tryon-size-button-{{ ai_gen_id }}" data-size-button data-size="{{ size }}">
+                {{ size }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <label class="ai-virtual-tryon-product-label-{{ ai_gen_id }}">{{ block.settings.product_label }}</label>
+          <div class="ai-virtual-tryon-dropdown-{{ ai_gen_id }}">
+            <button type="button" class="ai-virtual-tryon-dropdown-button-{{ ai_gen_id }}" data-dropdown-button>
+              <span data-dropdown-text>{{ block.settings.product_placeholder }}</span>
+              <svg class="ai-virtual-tryon-dropdown-arrow-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div class="ai-virtual-tryon-dropdown-menu-{{ ai_gen_id }}" data-dropdown-menu>
+              <input type="text" class="ai-virtual-tryon-dropdown-search-{{ ai_gen_id }}" placeholder="{{ block.settings.search_placeholder }}" data-search-input>
+              <div data-product-list>
+                {% if block.settings.products != blank %}
+                  {% for product in block.settings.products %}
+                    <div class="ai-virtual-tryon-dropdown-item-{{ ai_gen_id }}" data-product-item data-product-id="{{ product.id }}" data-product-title="{{ product.title }}">
+                      <div class="ai-virtual-tryon-dropdown-checkbox-{{ ai_gen_id }}">
+                        <svg class="ai-virtual-tryon-dropdown-checkmark-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                      <span>{{ product.title }}</span>
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="ai-virtual-tryon-dropdown-item-{{ ai_gen_id }}" style="pointer-events: none; opacity: 0.6;">
+                    <span>No products selected</span>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="ai-virtual-tryon-selected-tags-{{ ai_gen_id }}" data-selected-tags></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-virtual-tryon-submit-container-{{ ai_gen_id }}">
+      <button type="button" class="ai-virtual-tryon-submit-button-{{ ai_gen_id }}" disabled data-submit-button>
+        {{ block.settings.submit_button_text }}
+      </button>
+    </div>
+  </div>
+</kids-virtual-tryon-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class KidsVirtualTryon{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.uploadBox = this.querySelector('[data-upload-box]');
+        this.uploadPlaceholder = this.querySelector('[data-upload-placeholder]');
+        this.preview = this.querySelector('[data-preview]');
+        this.previewImage = this.querySelector('[data-preview-image]');
+        this.fileInput = this.querySelector('[data-file-input]');
+        this.browseButton = this.querySelector('[data-browse-button]');
+        this.sizeButtons = this.querySelectorAll('[data-size-button]');
+        this.dropdownButton = this.querySelector('[data-dropdown-button]');
+        this.dropdownMenu = this.querySelector('[data-dropdown-menu]');
+        this.dropdownText = this.querySelector('[data-dropdown-text]');
+        this.searchInput = this.querySelector('[data-search-input]');
+        this.productItems = this.querySelectorAll('[data-product-item]');
+        this.selectedTags = this.querySelector('[data-selected-tags]');
+        this.submitButton = this.querySelector('[data-submit-button]');
+
+        this.selectedImage = null;
+        this.selectedSize = null;
+        this.selectedProducts = new Set();
+      }
+
+      connectedCallback() {
+        this.setupUpload();
+        this.setupSizeSelection();
+        this.setupProductDropdown();
+        this.updateSubmitButton();
+      }
+
+      setupUpload() {
+        this.browseButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.fileInput.click();
+        });
+
+        this.uploadBox.addEventListener('click', () => {
+          if (!this.selectedImage) {
+            this.fileInput.click();
+          }
+        });
+
+        this.uploadBox.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          this.uploadBox.style.borderColor = '{{ block.settings.accent_color }}';
+        });
+
+        this.uploadBox.addEventListener('dragleave', () => {
+          this.uploadBox.style.borderColor = '{{ block.settings.border_color }}';
+        });
+
+        this.uploadBox.addEventListener('drop', (e) => {
+          e.preventDefault();
+          this.uploadBox.style.borderColor = '{{ block.settings.border_color }}';
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            this.handleFile(files[0]);
+          }
+        });
+
+        this.fileInput.addEventListener('change', (e) => {
+          if (e.target.files.length > 0) {
+            this.handleFile(e.target.files[0]);
+          }
+        });
+      }
+
+      handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.selectedImage = e.target.result;
+            this.previewImage.src = e.target.result;
+            this.uploadPlaceholder.style.display = 'none';
+            this.preview.classList.add('active');
+            this.uploadBox.classList.add('has-image');
+            this.updateSubmitButton();
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      setupSizeSelection() {
+        this.sizeButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            this.sizeButtons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            this.selectedSize = button.dataset.size;
+            this.updateSubmitButton();
+          });
+        });
+      }
+
+      setupProductDropdown() {
+        this.dropdownButton.addEventListener('click', () => {
+          this.dropdownButton.classList.toggle('open');
+          this.dropdownMenu.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!this.dropdownButton.contains(e.target) && !this.dropdownMenu.contains(e.target)) {
+            this.dropdownButton.classList.remove('open');
+            this.dropdownMenu.classList.remove('open');
+          }
+        });
+
+        this.searchInput.addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          this.productItems.forEach(item => {
+            const title = item.dataset.productTitle.toLowerCase();
+            if (title.includes(searchTerm)) {
+              item.style.display = 'flex';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+
+        this.productItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const productId = item.dataset.productId;
+            const productTitle = item.dataset.productTitle;
+
+            if (this.selectedProducts.has(productId)) {
+              this.selectedProducts.delete(productId);
+              item.classList.remove('selected');
+            } else {
+              this.selectedProducts.add(productId);
+              item.classList.add('selected');
+            }
+
+            this.updateSelectedTags();
+            this.updateSubmitButton();
+          });
+        });
+      }
+
+      updateSelectedTags() {
+        this.selectedTags.innerHTML = '';
+        this.selectedProducts.forEach(productId => {
+          const item = this.querySelector(`[data-product-id="${productId}"]`);
+          const productTitle = item.dataset.productTitle;
+
+          const tag = document.createElement('div');
+          tag.className = 'ai-virtual-tryon-tag-{{ ai_gen_id }}';
+          tag.innerHTML = `
+            <span>${productTitle}</span>
+            <svg class="ai-virtual-tryon-tag-remove-{{ ai_gen_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-remove="${productId}">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          `;
+
+          const removeIcon = tag.querySelector('[data-remove]');
+          removeIcon.addEventListener('click', () => {
+            this.selectedProducts.delete(productId);
+            item.classList.remove('selected');
+            this.updateSelectedTags();
+            this.updateSubmitButton();
+          });
+
+          this.selectedTags.appendChild(tag);
+        });
+      }
+
+      updateSubmitButton() {
+        const allFieldsFilled = this.selectedImage && this.selectedSize && this.selectedProducts.size > 0;
+        this.submitButton.disabled = !allFieldsFilled;
+      }
+    }
+
+    customElements.define('kids-virtual-tryon-{{ ai_gen_id }}', KidsVirtualTryon{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Kids virtual try-on",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Upload section"
+    },
+    {
+      "type": "text",
+      "id": "upload_heading",
+      "label": "Heading",
+      "default": "Upload Kids Photo"
+    },
+    {
+      "type": "text",
+      "id": "upload_subtext",
+      "label": "Subtext",
+      "default": "Clear front-facing photo works best"
+    },
+    {
+      "type": "text",
+      "id": "drag_drop_text",
+      "label": "Drag and drop text",
+      "default": "Drag & drop your photo here"
+    },
+    {
+      "type": "text",
+      "id": "browse_button_text",
+      "label": "Browse button text",
+      "default": "Browse Files"
+    },
+    {
+      "type": "text",
+      "id": "guideline_1",
+      "label": "Guideline 1",
+      "default": "Good lighting"
+    },
+    {
+      "type": "text",
+      "id": "guideline_2",
+      "label": "Guideline 2",
+      "default": "Center child"
+    },
+    {
+      "type": "text",
+      "id": "guideline_3",
+      "label": "Guideline 3",
+      "default": "Front-facing"
+    },
+    {
+      "type": "header",
+      "content": "Size selection"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size label",
+      "default": "Select Size"
+    },
+    {
+      "type": "header",
+      "content": "Product selection"
+    },
+    {
+      "type": "text",
+      "id": "product_label",
+      "label": "Product label",
+      "default": "Select Products"
+    },
+    {
+      "type": "text",
+      "id": "product_placeholder",
+      "label": "Dropdown placeholder",
+      "default": "Choose products to try on"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search products..."
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "limit": 20
+    },
+    {
+      "type": "header",
+      "content": "Submit button"
+    },
+    {
+      "type": "text",
+      "id": "submit_button_text",
+      "label": "Button text",
+      "default": "Generate Virtual Try-On"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F9FAFB"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#1F2937"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext",
+      "default": "#6B7280"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#A855F7"
+    },
+    {
+      "type": "color",
+      "id": "accent_hover_color",
+      "label": "Accent hover",
+      "default": "#9333EA"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#D1D5DB"
+    },
+    {
+      "type": "color",
+      "id": "upload_bg_color",
+      "label": "Upload box background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "upload_hover_bg",
+      "label": "Upload box hover",
+      "default": "#F3F4F6"
+    },
+    {
+      "type": "color",
+      "id": "size_bg_color",
+      "label": "Size button background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "size_hover_bg",
+      "label": "Size button hover",
+      "default": "#F3F4F6"
+    },
+    {
+      "type": "color",
+      "id": "success_color",
+      "label": "Success",
+      "default": "#10B981"
+    },
+    {
+      "type": "color",
+      "id": "disabled_color",
+      "label": "Disabled button",
+      "default": "#9CA3AF"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "subtext_size",
+      "label": "Subtext size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kids virtual try-on"
+    }
+  ]
+}
+{% endschema %}

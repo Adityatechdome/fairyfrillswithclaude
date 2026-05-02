@@ -1,0 +1,946 @@
+{% doc %}
+  @prompt
+    🎯 TASK
+    
+    Build a custom “Add Personalized Fairy Tale Story” feature on the Shopify product page that:
+    
+    Lets users optionally add a personalized story with the product
+    Collects:
+    Child Name
+    Age
+    Occasion
+    Personal Story Details (free text)
+    Child Photo (optional upload)
+    Saves all data using line item properties
+    Optionally adds a paid add-on product
+    Displays all data in cart + order details
+    Works with any Shopify theme (Liquid + Vanilla JS)
+    🧩 TECH CONSTRAINTS
+    Use Shopify Liquid + Vanilla JavaScript
+    NO checkout modifications
+    Use:
+    Line item properties for text data
+    External upload (Cloudinary) for image
+    Must NOT break existing Add to Cart flow
+    🏗️ IMPLEMENTATION
+    1. UI — ADD ABOVE “ADD TO CART” BUTTON
+    
+    Add this block inside product.liquid (above add-to-cart button):
+    
+    <div class="fairy-addon">
+    
+      <label>
+        <input type="checkbox" id="fairyToggle">
+        ✨ Add a Personalized Fairy Tale Story
+      </label>
+    
+      <div id="fairyFields" style="display:none; margin-top:10px;">
+    
+        <input type="text" name="properties[Child Name]" placeholder="Child Name">
+    
+        <select name="properties[Age]">
+          <option value="">Select Age</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+        </select>
+    
+        <select name="properties[Occasion]">
+          <option value="">Select Occasion</option>
+          <option>Birthday</option>
+          <option>Photoshoot</option>
+          <option>Wedding</option>
+          <option>Festival</option>
+        </select>
+    
+        <textarea name="properties[Personal Story Details]" 
+          placeholder="Tell us her favorite things, habits, or anything special..."></textarea>
+    
+        <!-- Photo Upload -->
+        <input type="file" id="childPhoto" accept="image/*">
+        <input type="hidden" name="properties[Child Photo URL]" id="childPhotoUrl">
+    
+        <small>
+          Photo is private and used only for story creation ✨
+        </small>
+    
+        <input type="hidden" name="properties[Fairy Tale Story]" value="Yes">
+    
+      </div>
+    
+    </div>
+    2. TOGGLE LOGIC (SHOW/HIDE FIELDS)
+    document.getElementById("fairyToggle").addEventListener("change", function() {
+      document.getElementById("fairyFields").style.display = this.checked ? "block" : "none";
+    });
+    3. IMAGE UPLOAD (CLOUDINARY)
+    const uploadImage = async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "YOUR_UPLOAD_PRESET");
+    
+      const res = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
+        method: "POST",
+        body: formData
+      });
+    
+      const data = await res.json();
+      return data.secure_url;
+    };
+    4. INTERCEPT ADD TO CART (IMPORTANT)
+    const form = document.querySelector("form[action='/cart/add']");
+    
+    form.addEventListener("submit", async (e) => {
+      const toggle = document.getElementById("fairyToggle");
+      const fileInput = document.getElementById("childPhoto");
+    
+      if (toggle.checked && fileInput.files.length > 0) {
+        e.preventDefault();
+    
+        const imageUrl = await uploadImage(fileInput.files[0]);
+        document.getElementById("childPhotoUrl").value = imageUrl;
+    
+        form.submit();
+      }
+    });
+    5. OPTIONAL — ADD PAID ADD-ON PRODUCT
+    Approach:
+    
+    Create a product:
+    👉 “Fairy Tale Story Add-On” (₹99)
+    
+    Then modify JS:
+    
+    if (toggle.checked) {
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: ADDON_VARIANT_ID,
+          quantity: 1
+        })
+      });
+    }
+    6. CART PAGE DISPLAY
+    
+    In cart.liquid or cart drawer:
+    
+    {% for item in cart.items %}
+      <div>
+        <p>{{ item.product.title }}</p>
+    
+        {% if item.properties %}
+          <ul>
+            {% for p in item.properties %}
+              {% unless p.last == blank %}
+                <li>{{ p.first }}: {{ p.last }}</li>
+              {% endunless %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endfor %}
+    7. UX STYLING (BASIC)
+    .fairy-addon {
+      border: 1px solid #eee;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #fff8f5;
+    }
+    
+    .fairy-addon input,
+    .fairy-addon select,
+    .fairy-addon textarea {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+    }
+    🔐 PRIVACY + TRUST
+    
+    Add text:
+    
+    👉 “Your details and photo are सुरक्षित and only used to create your child’s story.”
+    
+    📁 OUTPUT EXPECTATION
+    
+    Claude should generate:
+    
+    Product page Liquid block
+    JS (toggle + upload + add-to-cart intercept)
+    CSS styling
+    Instructions:
+    Where to paste code
+    How to replace Cloudinary credentials
+    How to add add-on product
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-fairy-addon-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: {{ block.settings.background_color }};
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-fairy-addon-toggle-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+
+  .ai-fairy-addon-toggle-{{ ai_gen_id }} input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .ai-fairy-addon-toggle-{{ ai_gen_id }} label {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-fairy-addon-fields-{{ ai_gen_id }} {
+    display: none;
+    margin-top: 20px;
+  }
+
+  .ai-fairy-addon-fields-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-fairy-addon-field-{{ ai_gen_id }} {
+    margin-bottom: 16px;
+  }
+
+  .ai-fairy-addon-field-{{ ai_gen_id }} label {
+    display: block;
+    font-size: {{ block.settings.label_size }}px;
+    font-weight: 500;
+    color: {{ block.settings.text_color }};
+    margin-bottom: 8px;
+  }
+
+  .ai-fairy-addon-field-{{ ai_gen_id }} input[type="text"],
+  .ai-fairy-addon-field-{{ ai_gen_id }} select,
+  .ai-fairy-addon-field-{{ ai_gen_id }} textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    background-color: {{ block.settings.input_background }};
+    color: {{ block.settings.input_text_color }};
+  }
+
+  .ai-fairy-addon-field-{{ ai_gen_id }} textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .ai-fairy-addon-field-{{ ai_gen_id }} input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px dashed {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    background-color: {{ block.settings.input_background }};
+    cursor: pointer;
+  }
+
+  .ai-fairy-addon-privacy-{{ ai_gen_id }} {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: {{ block.settings.privacy_bg_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    font-size: 12px;
+    color: {{ block.settings.privacy_text_color }};
+    line-height: 1.5;
+  }
+
+  .ai-fairy-addon-upload-status-{{ ai_gen_id }} {
+    margin-top: 8px;
+    font-size: 12px;
+    color: {{ block.settings.success_color }};
+    display: none;
+  }
+
+  .ai-fairy-addon-upload-status-{{ ai_gen_id }}.uploading {
+    color: {{ block.settings.text_color }};
+    display: block;
+  }
+
+  .ai-fairy-addon-upload-status-{{ ai_gen_id }}.success {
+    color: {{ block.settings.success_color }};
+    display: block;
+  }
+
+  .ai-fairy-addon-upload-status-{{ ai_gen_id }}.error {
+    color: {{ block.settings.error_color }};
+    display: block;
+  }
+
+  .ai-fairy-addon-required-{{ ai_gen_id }} {
+    color: {{ block.settings.error_color }};
+    margin-left: 4px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-fairy-addon-{{ ai_gen_id }} {
+      padding: 16px;
+    }
+  }
+{% endstyle %}
+
+<fairy-tale-addon-{{ ai_gen_id }}
+  class="ai-fairy-addon-{{ ai_gen_id }}"
+  data-cloudinary-cloud="{{ block.settings.cloudinary_cloud_name }}"
+  data-cloudinary-preset="{{ block.settings.cloudinary_upload_preset }}"
+  data-addon-product-id="{{ block.settings.addon_product.id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-fairy-addon-toggle-{{ ai_gen_id }}">
+    <input
+      type="checkbox"
+      id="ai-fairy-toggle-{{ ai_gen_id }}"
+      aria-controls="ai-fairy-fields-{{ ai_gen_id }}"
+      aria-expanded="false"
+    >
+    <label for="ai-fairy-toggle-{{ ai_gen_id }}">
+      {{ block.settings.toggle_icon }} {{ block.settings.heading }}
+    </label>
+  </div>
+
+  <div
+    id="ai-fairy-fields-{{ ai_gen_id }}"
+    class="ai-fairy-addon-fields-{{ ai_gen_id }}"
+  >
+    <div class="ai-fairy-addon-field-{{ ai_gen_id }}">
+      <label for="ai-fairy-child-name-{{ ai_gen_id }}">
+        {{ block.settings.child_name_label }}
+        <span class="ai-fairy-addon-required-{{ ai_gen_id }}">*</span>
+      </label>
+      <input
+        type="text"
+        id="ai-fairy-child-name-{{ ai_gen_id }}"
+        name="properties[{{ block.settings.child_name_property }}]"
+        placeholder="{{ block.settings.child_name_placeholder }}"
+        required
+      >
+    </div>
+
+    <div class="ai-fairy-addon-field-{{ ai_gen_id }}">
+      <label for="ai-fairy-age-{{ ai_gen_id }}">
+        {{ block.settings.age_label }}
+        <span class="ai-fairy-addon-required-{{ ai_gen_id }}">*</span>
+      </label>
+      <select
+        id="ai-fairy-age-{{ ai_gen_id }}"
+        name="properties[{{ block.settings.age_property }}]"
+        required
+      >
+        <option value="">{{ block.settings.age_placeholder }}</option>
+        {% for age in (3..12) %}
+          <option value="{{ age }}">{{ age }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="ai-fairy-addon-field-{{ ai_gen_id }}">
+      <label for="ai-fairy-occasion-{{ ai_gen_id }}">
+        {{ block.settings.occasion_label }}
+        <span class="ai-fairy-addon-required-{{ ai_gen_id }}">*</span>
+      </label>
+      <select
+        id="ai-fairy-occasion-{{ ai_gen_id }}"
+        name="properties[{{ block.settings.occasion_property }}]"
+        required
+      >
+        <option value="">{{ block.settings.occasion_placeholder }}</option>
+        {% assign occasions = block.settings.occasions | split: ',' %}
+        {% for occasion in occasions %}
+          <option value="{{ occasion | strip }}">{{ occasion | strip }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="ai-fairy-addon-field-{{ ai_gen_id }}">
+      <label for="ai-fairy-story-{{ ai_gen_id }}">
+        {{ block.settings.story_label }}
+      </label>
+      <textarea
+        id="ai-fairy-story-{{ ai_gen_id }}"
+        name="properties[{{ block.settings.story_property }}]"
+        placeholder="{{ block.settings.story_placeholder }}"
+      ></textarea>
+    </div>
+
+    {% if block.settings.enable_photo_upload %}
+      <div class="ai-fairy-addon-field-{{ ai_gen_id }}">
+        <label for="ai-fairy-photo-{{ ai_gen_id }}">
+          {{ block.settings.photo_label }}
+        </label>
+        <input
+          type="file"
+          id="ai-fairy-photo-{{ ai_gen_id }}"
+          accept="image/*"
+          aria-describedby="ai-fairy-upload-status-{{ ai_gen_id }}"
+        >
+        <input
+          type="hidden"
+          name="properties[{{ block.settings.photo_property }}]"
+          id="ai-fairy-photo-url-{{ ai_gen_id }}"
+        >
+        <div
+          id="ai-fairy-upload-status-{{ ai_gen_id }}"
+          class="ai-fairy-addon-upload-status-{{ ai_gen_id }}"
+        ></div>
+      </div>
+    {% endif %}
+
+    <input
+      type="hidden"
+      name="properties[{{ block.settings.fairy_tale_property }}]"
+      value="Yes"
+    >
+
+    <div class="ai-fairy-addon-privacy-{{ ai_gen_id }}">
+      {{ block.settings.privacy_message }}
+    </div>
+  </div>
+</fairy-tale-addon-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FairyTaleAddon{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.toggle = this.querySelector('#ai-fairy-toggle-{{ ai_gen_id }}');
+        this.fields = this.querySelector('#ai-fairy-fields-{{ ai_gen_id }}');
+        this.photoInput = this.querySelector('#ai-fairy-photo-{{ ai_gen_id }}');
+        this.photoUrlInput = this.querySelector('#ai-fairy-photo-url-{{ ai_gen_id }}');
+        this.uploadStatus = this.querySelector('#ai-fairy-upload-status-{{ ai_gen_id }}');
+        this.cloudinaryCloud = this.dataset.cloudinaryCloud;
+        this.cloudinaryPreset = this.dataset.cloudinaryPreset;
+        this.addonProductId = this.dataset.addonProductId;
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.toggle.addEventListener('change', () => {
+          this.handleToggle();
+        });
+
+        if (this.photoInput) {
+          this.photoInput.addEventListener('change', (e) => {
+            this.handlePhotoUpload(e);
+          });
+        }
+
+        const form = this.closest('form[action*="/cart/add"]');
+        if (form) {
+          form.addEventListener('submit', (e) => {
+            this.handleFormSubmit(e);
+          });
+        }
+      }
+
+      handleToggle() {
+        const isChecked = this.toggle.checked;
+        this.toggle.setAttribute('aria-expanded', isChecked);
+
+        if (isChecked) {
+          this.fields.classList.add('active');
+          this.setRequiredFields(true);
+          this.addAddonProduct();
+        } else {
+          this.fields.classList.remove('active');
+          this.setRequiredFields(false);
+          this.clearFields();
+          this.removeAddonProduct();
+        }
+      }
+
+      setRequiredFields(required) {
+        const requiredInputs = this.querySelectorAll('[required]');
+        requiredInputs.forEach(input => {
+          if (required) {
+            input.setAttribute('required', '');
+          } else {
+            input.removeAttribute('required');
+          }
+        });
+      }
+
+      clearFields() {
+        const inputs = this.querySelectorAll('input[type="text"], textarea, select');
+        inputs.forEach(input => {
+          input.value = '';
+        });
+
+        if (this.photoInput) {
+          this.photoInput.value = '';
+        }
+
+        if (this.photoUrlInput) {
+          this.photoUrlInput.value = '';
+        }
+
+        if (this.uploadStatus) {
+          this.uploadStatus.textContent = '';
+          this.uploadStatus.className = 'ai-fairy-addon-upload-status-{{ ai_gen_id }}';
+        }
+      }
+
+      async handlePhotoUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (!this.cloudinaryCloud || !this.cloudinaryPreset) {
+          this.showUploadStatus('Please configure Cloudinary settings', 'error');
+          return;
+        }
+
+        this.showUploadStatus('Uploading photo...', 'uploading');
+
+        try {
+          const imageUrl = await this.uploadToCloudinary(file);
+          this.photoUrlInput.value = imageUrl;
+          this.showUploadStatus('Photo uploaded successfully ✓', 'success');
+        } catch (error) {
+          this.showUploadStatus('Upload failed. Please try again.', 'error');
+          console.error('Upload error:', error);
+        }
+      }
+
+      async uploadToCloudinary(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', this.cloudinaryPreset);
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${this.cloudinaryCloud}/image/upload`,
+          {
+            method: 'POST',
+            body: formData
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+
+        const data = await response.json();
+        return data.secure_url;
+      }
+
+      showUploadStatus(message, type) {
+        if (!this.uploadStatus) return;
+
+        this.uploadStatus.textContent = message;
+        this.uploadStatus.className = `ai-fairy-addon-upload-status-{{ ai_gen_id }} ${type}`;
+      }
+
+      async handleFormSubmit(event) {
+        if (!this.toggle.checked) return;
+
+        if (this.photoInput && this.photoInput.files.length > 0 && !this.photoUrlInput.value) {
+          event.preventDefault();
+          this.showUploadStatus('Please wait for photo upload to complete', 'error');
+          return;
+        }
+
+        const childName = this.querySelector('#ai-fairy-child-name-{{ ai_gen_id }}').value;
+        const age = this.querySelector('#ai-fairy-age-{{ ai_gen_id }}').value;
+        const occasion = this.querySelector('#ai-fairy-occasion-{{ ai_gen_id }}').value;
+
+        if (!childName || !age || !occasion) {
+          event.preventDefault();
+          alert('Please fill in all required fields for the personalized fairy tale story.');
+          return;
+        }
+      }
+
+      async addAddonProduct() {
+        if (!this.addonProductId) return;
+
+        try {
+          await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: this.addonProductId,
+              quantity: 1
+            })
+          });
+        } catch (error) {
+          console.error('Failed to add addon product:', error);
+        }
+      }
+
+      async removeAddonProduct() {
+        if (!this.addonProductId) return;
+
+        try {
+          const cartResponse = await fetch('/cart.js');
+          const cart = await cartResponse.json();
+
+          const addonItem = cart.items.find(item => item.id == this.addonProductId);
+
+          if (addonItem) {
+            await fetch('/cart/change.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: this.addonProductId,
+                quantity: 0
+              })
+            });
+          }
+        } catch (error) {
+          console.error('Failed to remove addon product:', error);
+        }
+      }
+    }
+
+    customElements.define('fairy-tale-addon-{{ ai_gen_id }}', FairyTaleAddon{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Fairy tale story addon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Add a Personalized Fairy Tale Story"
+    },
+    {
+      "type": "text",
+      "id": "toggle_icon",
+      "label": "Icon",
+      "default": "✨"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Child name field"
+    },
+    {
+      "type": "text",
+      "id": "child_name_label",
+      "label": "Label",
+      "default": "Child Name"
+    },
+    {
+      "type": "text",
+      "id": "child_name_placeholder",
+      "label": "Placeholder",
+      "default": "Enter child's name"
+    },
+    {
+      "type": "text",
+      "id": "child_name_property",
+      "label": "Property name",
+      "default": "Child Name"
+    },
+    {
+      "type": "header",
+      "content": "Age field"
+    },
+    {
+      "type": "text",
+      "id": "age_label",
+      "label": "Label",
+      "default": "Age"
+    },
+    {
+      "type": "text",
+      "id": "age_placeholder",
+      "label": "Placeholder",
+      "default": "Select Age"
+    },
+    {
+      "type": "text",
+      "id": "age_property",
+      "label": "Property name",
+      "default": "Age"
+    },
+    {
+      "type": "header",
+      "content": "Occasion field"
+    },
+    {
+      "type": "text",
+      "id": "occasion_label",
+      "label": "Label",
+      "default": "Occasion"
+    },
+    {
+      "type": "text",
+      "id": "occasion_placeholder",
+      "label": "Placeholder",
+      "default": "Select Occasion"
+    },
+    {
+      "type": "text",
+      "id": "occasions",
+      "label": "Occasion options",
+      "default": "Birthday, Photoshoot, Wedding, Festival",
+      "info": "Separate options with commas"
+    },
+    {
+      "type": "text",
+      "id": "occasion_property",
+      "label": "Property name",
+      "default": "Occasion"
+    },
+    {
+      "type": "header",
+      "content": "Story details field"
+    },
+    {
+      "type": "text",
+      "id": "story_label",
+      "label": "Label",
+      "default": "Personal Story Details"
+    },
+    {
+      "type": "textarea",
+      "id": "story_placeholder",
+      "label": "Placeholder",
+      "default": "Tell us her favorite things, habits, or anything special..."
+    },
+    {
+      "type": "text",
+      "id": "story_property",
+      "label": "Property name",
+      "default": "Personal Story Details"
+    },
+    {
+      "type": "header",
+      "content": "Photo upload"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_photo_upload",
+      "label": "Enable photo upload",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "photo_label",
+      "label": "Label",
+      "default": "Child Photo (Optional)"
+    },
+    {
+      "type": "text",
+      "id": "photo_property",
+      "label": "Property name",
+      "default": "Child Photo URL"
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_cloud_name",
+      "label": "Cloudinary cloud name",
+      "info": "Your Cloudinary cloud name"
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_upload_preset",
+      "label": "Cloudinary upload preset",
+      "info": "Your Cloudinary upload preset"
+    },
+    {
+      "type": "header",
+      "content": "Add-on product"
+    },
+    {
+      "type": "product",
+      "id": "addon_product",
+      "label": "Paid add-on product",
+      "info": "Optional product to add when fairy tale is selected"
+    },
+    {
+      "type": "header",
+      "content": "Privacy message"
+    },
+    {
+      "type": "richtext",
+      "id": "privacy_message",
+      "label": "Privacy message",
+      "default": "<p>🔒 Your details and photo are सुरक्षित and only used to create your child's story.</p>"
+    },
+    {
+      "type": "text",
+      "id": "fairy_tale_property",
+      "label": "Fairy tale property name",
+      "default": "Fairy Tale Story"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#fff8f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Input fields"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Border",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 12,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Privacy section"
+    },
+    {
+      "type": "color",
+      "id": "privacy_bg_color",
+      "label": "Background",
+      "default": "#fef3e8"
+    },
+    {
+      "type": "color",
+      "id": "privacy_text_color",
+      "label": "Text",
+      "default": "#7d5449"
+    },
+    {
+      "type": "header",
+      "content": "Status colors"
+    },
+    {
+      "type": "color",
+      "id": "success_color",
+      "label": "Success",
+      "default": "#008060"
+    },
+    {
+      "type": "color",
+      "id": "error_color",
+      "label": "Error",
+      "default": "#D82C0D"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fairy tale story addon"
+    }
+  ]
+}
+{% endschema %}
