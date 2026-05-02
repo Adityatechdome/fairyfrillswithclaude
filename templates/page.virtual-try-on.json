@@ -50,46 +50,10 @@
             "button_radius": 8
           },
           "blocks": {}
-        },
-        "ai_gen_block_33f0b4d_V8mMPy": {
-          "type": "ai_gen_block_33f0b4d",
-          "settings": {
-            "upload_heading": "Upload Kids Photo",
-            "upload_subtext": "Clear front-facing photo works best",
-            "drag_drop_text": "Drag & drop your photo here",
-            "browse_button_text": "Browse Files",
-            "guideline_1": "Good lighting",
-            "guideline_2": "Center child",
-            "guideline_3": "Front-facing",
-            "size_label": "Select Size",
-            "product_label": "Select Products",
-            "product_placeholder": "Choose products to try on",
-            "search_placeholder": "Search products...",
-            "products": "{{ closest.page.metafields.custom.product_search.value }}",
-            "submit_button_text": "Generate Virtual Try-On",
-            "background_color": "#f5f5f5",
-            "text_color": "#1f2937",
-            "subtext_color": "#6b7280",
-            "accent_color": "#c2185b",
-            "accent_hover_color": "#fde8ef",
-            "border_color": "#d1d5db",
-            "upload_bg_color": "#ffffff",
-            "upload_hover_bg": "#f3f4f6",
-            "size_bg_color": "#ffffff",
-            "size_hover_bg": "#f3f4f6",
-            "success_color": "#10b981",
-            "disabled_color": "#000000",
-            "heading_size": 24,
-            "subtext_size": 14,
-            "border_radius": 12,
-            "button_radius": 8
-          },
-          "blocks": {}
         }
       },
       "block_order": [
-        "virtual_tryon_with_api_a4PenK",
-        "ai_gen_block_33f0b4d_V8mMPy"
+        "virtual_tryon_with_api_a4PenK"
       ],
       "name": "virtual try on ",
       "settings": {
