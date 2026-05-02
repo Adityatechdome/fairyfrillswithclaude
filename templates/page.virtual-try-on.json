@@ -1,1 +1,313 @@
-{"sections":{"177741075179c55f2f":{"type":"_blocks","blocks":{"ai_gen_block_33f0b4d_V8mMPy":{"type":"ai_gen_block_33f0b4d","settings":{"upload_heading":"Upload Kids Photo","upload_subtext":"Clear front-facing photo works best","drag_drop_text":"Drag & drop your photo here","browse_button_text":"Browse Files","guideline_1":"Good lighting","guideline_2":"Center child","guideline_3":"Front-facing","size_label":"Select Size","product_label":"Select Products","product_placeholder":"Choose products to try on","search_placeholder":"Search products...","products":"{{ closest.page.metafields.custom.product_search.value }}","submit_button_text":"Generate Virtual Try-On","background_color":"#f5f5f5","text_color":"#1f2937","subtext_color":"#6b7280","accent_color":"#c2185b","accent_hover_color":"#fde8ef","border_color":"#d1d5db","upload_bg_color":"#ffffff","upload_hover_bg":"#f3f4f6","size_bg_color":"#ffffff","size_hover_bg":"#f3f4f6","success_color":"#10b981","disabled_color":"#000000","heading_size":24,"subtext_size":14,"border_radius":12,"button_radius":8},"blocks":{}}},"block_order":["ai_gen_block_33f0b4d_V8mMPy"],"name":"virtual try on ","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":46,"section_width":"page-width","section_height":"medium","section_height_custom":50,"color_scheme":"scheme-1","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","padding-block-start":13,"padding-block-end":0}},"main":{"type":"main-page","blocks":{"heading":{"type":"text","name":"Title","settings":{"text":"<h1>{{ closest.page.title }}<\/h1>","width":"100%","max_width":"normal","alignment":"left","type_preset":"h2","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"accordion_MYjznb":{"type":"accordion","name":"t:names.accordion","settings":{"icon":"caret","dividers":true,"type_preset":"h6","inherit_color_scheme":true,"color_scheme":"","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"accordion_row_GxwKnq":{"type":"_accordion-row","settings":{"heading":"Return policy","open_by_default":true,"icon":"none","width":20},"blocks":{"text_DDaPFD":{"type":"text","settings":{"text":"<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.<\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_DDaPFD"]},"accordion_row_Cqy7JC":{"type":"_accordion-row","settings":{"heading":"Shipping","open_by_default":false,"icon":"none","width":20},"blocks":{"text_cV3MTx":{"type":"text","settings":{"text":"<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.<\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_cV3MTx"]},"accordion_row_WAMA4A":{"type":"_accordion-row","settings":{"heading":"Manufacturing","open_by_default":false,"icon":"none","width":20},"blocks":{"text_YeUrhn":{"type":"text","settings":{"text":"<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.<\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_YeUrhn"]}},"block_order":["accordion_row_GxwKnq","accordion_row_Cqy7JC","accordion_row_WAMA4A"]}},"block_order":["heading","accordion_MYjznb"],"settings":{"content_direction":"column","gap":32,"color_scheme":"","padding-block-start":40,"padding-block-end":80}}},"order":["177741075179c55f2f","main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "177741075179c55f2f": {
+      "type": "_blocks",
+      "blocks": {
+        "virtual_tryon_with_api_a4PenK": {
+          "type": "virtual-tryon-with-api",
+          "name": "Virtual Try-On",
+          "settings": {
+            "api_key": "fa-DtkRJnqakNmG-zLq6BGwZgqGhYagnn4NdKNRI",
+            "cloudinary_upload_preset": "virtual_tryon",
+            "upload_heading": "Upload Kids Photo",
+            "upload_subtext": "Clear front-facing photo works best",
+            "drag_drop_text": "Drag & drop your photo here",
+            "browse_button_text": "Browse Files",
+            "guideline_1": "Good lighting",
+            "guideline_2": "Center child",
+            "guideline_3": "Front-facing",
+            "size_label": "Select Size",
+            "product_label": "Select Products",
+            "product_placeholder": "Choose products to try on",
+            "search_placeholder": "Search products...",
+            "products": [
+              "anna-theme-royal-twirl-dress"
+            ],
+            "submit_button_text": "Generate Virtual Try-On",
+            "loading_message": "Generating your virtual try-on...",
+            "results_heading": "Your Virtual Try-Ons",
+            "background_color": "#f5f5f5",
+            "text_color": "#1f2937",
+            "subtext_color": "#6b7280",
+            "accent_color": "#c2185b",
+            "border_color": "#d1d5db",
+            "upload_bg_color": "#ffffff",
+            "upload_hover_bg": "#f3f4f6",
+            "size_bg_color": "#ffffff",
+            "success_color": "#10b981",
+            "heading_size": 24,
+            "subtext_size": 14,
+            "border_radius": 12,
+            "button_radius": 8
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_33f0b4d_V8mMPy": {
+          "type": "ai_gen_block_33f0b4d",
+          "settings": {
+            "upload_heading": "Upload Kids Photo",
+            "upload_subtext": "Clear front-facing photo works best",
+            "drag_drop_text": "Drag & drop your photo here",
+            "browse_button_text": "Browse Files",
+            "guideline_1": "Good lighting",
+            "guideline_2": "Center child",
+            "guideline_3": "Front-facing",
+            "size_label": "Select Size",
+            "product_label": "Select Products",
+            "product_placeholder": "Choose products to try on",
+            "search_placeholder": "Search products...",
+            "products": "{{ closest.page.metafields.custom.product_search.value }}",
+            "submit_button_text": "Generate Virtual Try-On",
+            "background_color": "#f5f5f5",
+            "text_color": "#1f2937",
+            "subtext_color": "#6b7280",
+            "accent_color": "#c2185b",
+            "accent_hover_color": "#fde8ef",
+            "border_color": "#d1d5db",
+            "upload_bg_color": "#ffffff",
+            "upload_hover_bg": "#f3f4f6",
+            "size_bg_color": "#ffffff",
+            "size_hover_bg": "#f3f4f6",
+            "success_color": "#10b981",
+            "disabled_color": "#000000",
+            "heading_size": 24,
+            "subtext_size": 14,
+            "border_radius": 12,
+            "button_radius": 8
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "virtual_tryon_with_api_a4PenK",
+        "ai_gen_block_33f0b4d_V8mMPy"
+      ],
+      "name": "virtual try on ",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 46,
+        "section_width": "page-width",
+        "section_height": "medium",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-1",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 13,
+        "padding-block-end": 0
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "accordion_MYjznb": {
+          "type": "accordion",
+          "name": "t:names.accordion",
+          "settings": {
+            "icon": "caret",
+            "dividers": true,
+            "type_preset": "h6",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "accordion_row_GxwKnq": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Return policy",
+                "open_by_default": true,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_DDaPFD": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_DDaPFD"
+              ]
+            },
+            "accordion_row_Cqy7JC": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Shipping",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_cV3MTx": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_cV3MTx"
+              ]
+            },
+            "accordion_row_WAMA4A": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Manufacturing",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_YeUrhn": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_YeUrhn"
+              ]
+            }
+          },
+          "block_order": [
+            "accordion_row_GxwKnq",
+            "accordion_row_Cqy7JC",
+            "accordion_row_WAMA4A"
+          ]
+        }
+      },
+      "block_order": [
+        "heading",
+        "accordion_MYjznb"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "177741075179c55f2f",
+    "main"
+  ]
+}
