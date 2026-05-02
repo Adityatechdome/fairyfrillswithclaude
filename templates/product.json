@@ -402,78 +402,6 @@
         "padding-block-end": 0
       }
     },
-    "blocks_Ac9C83": {
-      "type": "_blocks",
-      "blocks": {
-        "virtual_tryon_with_api_ryPm47": {
-          "type": "virtual-tryon-with-api",
-          "settings": {
-            "api_key": "fa-DtkRJnqakNmG-zLq6BGwZgqGhYagnn4NdKNRI",
-            "cloudinary_upload_preset": "virtual_tryon",
-            "upload_heading": "Upload Kids Photo",
-            "upload_subtext": "Clear front-facing photo works best",
-            "drag_drop_text": "Drag & drop your photo here",
-            "browse_button_text": "Browse Files",
-            "guideline_1": "Good lighting",
-            "guideline_2": "Center child",
-            "guideline_3": "Front-facing",
-            "size_label": "Select Size",
-            "product_label": "Select Products",
-            "product_placeholder": "Choose products to try on",
-            "search_placeholder": "Search products...",
-            "products": [],
-            "submit_button_text": "Generate Virtual Try-On",
-            "loading_message": "Generating your virtual try-on...",
-            "results_heading": "Your Virtual Try-Ons",
-            "background_color": "#f5f5f5",
-            "text_color": "#1f2937",
-            "subtext_color": "#6b7280",
-            "accent_color": "#c2185b",
-            "border_color": "#d1d5db",
-            "upload_bg_color": "#ffffff",
-            "upload_hover_bg": "#f3f4f6",
-            "size_bg_color": "#ffffff",
-            "success_color": "#10b981",
-            "heading_size": 24,
-            "subtext_size": 14,
-            "border_radius": 12,
-            "button_radius": 8
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "virtual_tryon_with_api_ryPm47"
-      ],
-      "name": "Virtual Try-On",
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
     "product_recommendations_xmXAhw": {
       "type": "product-recommendations",
       "blocks": {
@@ -745,7 +673,6 @@
   },
   "order": [
     "main",
-    "blocks_Ac9C83",
     "product_recommendations_xmXAhw",
     "1777487179a52c9fcb"
   ]
