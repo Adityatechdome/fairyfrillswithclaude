@@ -382,6 +382,206 @@
     display: none;
   }
 
+  .vt-results-modal-{{ block_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .vt-results-modal-{{ block_id }}.open {
+    display: flex;
+  }
+
+  .vt-results-modal-backdrop-{{ block_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 0;
+  }
+
+  .vt-results-modal-content-{{ block_id }} {
+    position: relative;
+    z-index: 1;
+    background: white;
+    border-radius: {{ block.settings.border_radius }}px;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .vt-results-modal-header-{{ block_id }} {
+    padding: 24px;
+    border-bottom: 1px solid {{ block.settings.border_color }};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .vt-results-modal-title-{{ block_id }} {
+    font-size: 24px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  .vt-results-modal-close-{{ block_id }} {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: {{ block.settings.text_color }};
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vt-results-modal-body-{{ block_id }} {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .vt-results-gallery-{{ block_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .vt-result-item-{{ block_id }} {
+    background: white;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .vt-result-item-{{ block_id }}:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+  }
+
+  .vt-result-image-{{ block_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    background-color: {{ block.settings.upload_hover_bg }};
+  }
+
+  .vt-result-overlay-{{ block_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .vt-result-item-{{ block_id }}:hover .vt-result-overlay-{{ block_id }} {
+    opacity: 1;
+  }
+
+  .vt-download-button-{{ block_id }} {
+    padding: 10px 20px;
+    background-color: {{ block.settings.accent_color }};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .vt-download-button-{{ block_id }}:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+
+  .vt-results-modal-footer-{{ block_id }} {
+    padding: 16px 24px;
+    border-top: 1px solid {{ block.settings.border_color }};
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .vt-download-all-button-{{ block_id }} {
+    padding: 10px 24px;
+    background-color: {{ block.settings.accent_color }};
+    color: white;
+    border: none;
+    border-radius: {{ block.settings.button_radius }}px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .vt-download-all-button-{{ block_id }}:hover {
+    opacity: 0.9;
+  }
+
+  .vt-modal-loading-{{ block_id }} {
+    display: none;
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  .vt-modal-loading-{{ block_id }}.show {
+    display: block;
+  }
+
+  .vt-modal-spinner-{{ block_id }} {
+    width: 50px;
+    height: 50px;
+    border: 4px solid {{ block.settings.border_color }};
+    border-top-color: {{ block.settings.accent_color }};
+    border-radius: 50%;
+    animation: vt-spin-{{ block_id }} 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes vt-spin-{{ block_id }} {
+    to { transform: rotate(360deg); }
+  }
+
+  .vt-modal-error-{{ block_id }} {
+    display: none;
+    padding: 16px;
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: {{ block.settings.button_radius }}px;
+    color: #c00;
+    margin: 0 0 16px 0;
+  }
+
+  .vt-modal-error-{{ block_id }}.show {
+    display: block;
+  }
+
   @media (max-width: 768px) {
     .vt-grid-{{ block_id }} {
       grid-template-columns: 1fr;
@@ -401,8 +601,29 @@
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 
+    .vt-results-gallery-{{ block_id }} {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
     .vt-submit-button-{{ block_id }} {
       width: 100%;
+    }
+
+    .vt-results-modal-content-{{ block_id }} {
+      max-width: 95vw;
+      max-height: 95vh;
+    }
+
+    .vt-results-modal-header-{{ block_id }} {
+      padding: 16px;
+    }
+
+    .vt-results-modal-body-{{ block_id }} {
+      padding: 16px;
+    }
+
+    .vt-results-modal-footer-{{ block_id }} {
+      padding: 12px 16px;
     }
   }
 {% endstyle %}
@@ -524,10 +745,27 @@
       </div>
     </div>
 
-    <!-- Results Section -->
-    <div class="vt-results-section-{{ block_id }}" data-results-section style="display: none;">
-      <h3 class="vt-results-title-{{ block_id }}">{{ block.settings.results_heading }}</h3>
-      <div class="vt-results-grid-{{ block_id }}" data-results-grid></div>
+  </div>
+
+  <!-- Results Modal -->
+  <div class="vt-results-modal-{{ block_id }}" data-results-modal>
+    <div class="vt-results-modal-backdrop-{{ block_id }}" data-modal-backdrop></div>
+    <div class="vt-results-modal-content-{{ block_id }}">
+      <div class="vt-results-modal-header-{{ block_id }}">
+        <h2 class="vt-results-modal-title-{{ block_id }}">{{ block.settings.results_heading }}</h2>
+        <button class="vt-results-modal-close-{{ block_id }}" data-modal-close>&times;</button>
+      </div>
+      <div class="vt-results-modal-body-{{ block_id }}">
+        <div class="vt-modal-error-{{ block_id }}" data-modal-error></div>
+        <div class="vt-modal-loading-{{ block_id }}" data-modal-loading>
+          <div class="vt-modal-spinner-{{ block_id }}"></div>
+          <p>{{ block.settings.loading_message }}</p>
+        </div>
+        <div class="vt-results-gallery-{{ block_id }}" data-results-gallery></div>
+      </div>
+      <div class="vt-results-modal-footer-{{ block_id }}">
+        <button class="vt-download-all-button-{{ block_id }}" data-download-all>{{ block.settings.download_all_button_text | default: 'Download All' }}</button>
+      </div>
     </div>
   </div>
 </virtual-tryon-{{ block_id }}>
@@ -555,6 +793,7 @@
     connectedCallback() {
       this.setupElements();
       this.setupEventListeners();
+      this.setupModal();
     }
 
     setupElements() {
@@ -574,8 +813,14 @@
       this.submitButton = selector('[data-submit-button]');
       this.errorMessage = selector('[data-error-message]');
       this.loadingState = selector('[data-loading-state]');
-      this.resultsSection = selector('[data-results-section]');
-      this.resultsGrid = selector('[data-results-grid]');
+      // Modal elements
+      this.resultsModal = selector('[data-results-modal]');
+      this.modalBackdrop = selector('[data-modal-backdrop]');
+      this.modalClose = selector('[data-modal-close]');
+      this.modalLoading = selector('[data-modal-loading]');
+      this.modalError = selector('[data-modal-error]');
+      this.resultsGallery = selector('[data-results-gallery]');
+      this.downloadAllBtn = selector('[data-download-all]');
     }
 
     setupEventListeners() {
@@ -668,6 +913,12 @@
       this.submitButton.addEventListener('click', () => this.handleSubmit());
     }
 
+    setupModal() {
+      this.modalClose.addEventListener('click', () => this.closeResultsModal());
+      this.modalBackdrop.addEventListener('click', () => this.closeResultsModal());
+      this.downloadAllBtn.addEventListener('click', () => this.downloadAllImages());
+    }
+
     handleFile(file) {
       if (!file.type.startsWith('image/')) return;
 
@@ -725,8 +976,10 @@
 
     async handleSubmit() {
       this.submitButton.disabled = true;
-      this.loadingState.style.display = 'block';
-      this.resultsSection.style.display = 'none';
+      this.openResultsModal();
+      this.modalLoading.classList.add('show');
+      this.modalError.classList.remove('show');
+      this.resultsGallery.innerHTML = '';
 
       try {
         const payload = {
@@ -739,15 +992,15 @@
 
         this.displayResults(result.images || []);
       } catch (error) {
-        this.showError(error.message || 'Failed to generate virtual try-on');
+        this.showModalError(error.message || 'Failed to generate virtual try-on');
       } finally {
-        this.loadingState.style.display = 'none';
+        this.modalLoading.classList.remove('show');
         this.submitButton.disabled = false;
       }
     }
 
     displayResults(images) {
-      this.resultsGrid.innerHTML = '';
+      this.resultsGallery.innerHTML = '';
 
       images.forEach((img, index) => {
         const item = document.createElement('div');
@@ -755,24 +1008,25 @@
         const imageUrl = img.url || img;
         item.innerHTML = `
           <img src="${imageUrl}" alt="Result ${index + 1}" class="vt-result-image-{{ block_id }}">
-          <div class="vt-result-actions-{{ block_id }}">
-            <button class="vt-download-button-{{ block_id }}" data-download="${imageUrl}">
+          <div class="vt-result-overlay-{{ block_id }}">
+            <button class="vt-download-button-{{ block_id }}" data-download-index="${index}">
               Download
             </button>
           </div>
         `;
 
-        item.querySelector('[data-download]').addEventListener('click', (e) => {
-          this.downloadImage(e.target.dataset.download);
+        item.querySelector('[data-download-index]').addEventListener('click', () => {
+          this.downloadImage(imageUrl, index);
         });
 
-        this.resultsGrid.appendChild(item);
+        this.resultsGallery.appendChild(item);
 
         // Upload to Cloudinary in background (non-blocking)
         this.archiveToCloudinary(imageUrl, index);
       });
 
-      this.resultsSection.style.display = 'block';
+      // Store image URLs for batch download
+      this.currentImages = images.map(img => img.url || img);
     }
 
     async archiveToCloudinary(imageUrl, index) {
@@ -783,13 +1037,36 @@
       }
     }
 
-    downloadImage(url) {
+    downloadImage(url, index) {
       const a = document.createElement('a');
       a.href = url;
-      a.download = `virtual-tryon-${Date.now()}.png`;
+      a.download = `virtual-tryon-${Date.now()}-${index}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+    }
+
+    downloadAllImages() {
+      if (!this.currentImages || this.currentImages.length === 0) return;
+
+      this.currentImages.forEach((url, index) => {
+        setTimeout(() => {
+          this.downloadImage(url, index);
+        }, 200 * index);
+      });
+    }
+
+    openResultsModal() {
+      this.resultsModal.classList.add('open');
+    }
+
+    closeResultsModal() {
+      this.resultsModal.classList.remove('open');
+    }
+
+    showModalError(message) {
+      this.modalError.textContent = message;
+      this.modalError.classList.add('show');
     }
   }
 
