@@ -1,0 +1,903 @@
+{% assign block_id = section.id | replace: '_', '' | downcase %}
+{% assign api_key = section.settings.api_key %}
+
+{% style %}
+  .search-vt-{{ block_id }} {
+    width: 100%;
+    background-color: {{ section.settings.background_color }};
+    padding: 40px 20px;
+  }
+
+  .search-vt-container-{{ block_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .search-vt-section-heading-{{ block_id }} {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 40px 0;
+  }
+
+  .search-vt-grid-{{ block_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .search-vt-upload-{{ block_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .search-vt-label-{{ block_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+  }
+
+  .search-vt-upload-box-{{ block_id }} {
+    border: 2px dashed {{ section.settings.border_color }};
+    border-radius: {{ section.settings.border_radius }}px;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: {{ section.settings.upload_bg_color }};
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .search-vt-upload-box-{{ block_id }}:hover {
+    border-color: {{ section.settings.accent_color }};
+    background-color: {{ section.settings.upload_hover_bg }};
+  }
+
+  .search-vt-upload-box-{{ block_id }}.has-image {
+    border-style: solid;
+    padding: 0;
+    min-height: auto;
+  }
+
+  .search-vt-upload-icon-{{ block_id }} {
+    width: 48px;
+    height: 48px;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 16px;
+  }
+
+  .search-vt-upload-text-{{ block_id }} {
+    color: {{ section.settings.text_color }};
+    font-size: 16px;
+    margin: 0 0 16px 0;
+  }
+
+  .search-vt-file-input-{{ block_id }} {
+    display: none;
+  }
+
+  .search-vt-preview-{{ block_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ section.settings.border_radius }}px;
+  }
+
+  .search-vt-button-{{ block_id }} {
+    padding: 12px 24px;
+    background-color: {{ section.settings.accent_color }};
+    color: white;
+    border: none;
+    border-radius: {{ section.settings.button_radius }}px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .search-vt-button-{{ block_id }}:hover {
+    opacity: 0.9;
+  }
+
+  .search-vt-controls-{{ block_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .search-vt-size-section-{{ block_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-vt-size-grid-{{ block_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  .search-vt-size-button-{{ block_id }} {
+    padding: 12px 16px;
+    background-color: {{ section.settings.size_bg_color }};
+    color: {{ section.settings.text_color }};
+    border: 2px solid {{ section.settings.border_color }};
+    border-radius: {{ section.settings.button_radius }}px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .search-vt-size-button-{{ block_id }}:hover {
+    border-color: {{ section.settings.accent_color }};
+  }
+
+  .search-vt-size-button-{{ block_id }}.selected {
+    background-color: {{ section.settings.accent_color }};
+    color: white;
+    border-color: {{ section.settings.accent_color }};
+  }
+
+  .search-vt-product-section-{{ block_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-vt-search-input-{{ block_id }} {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid {{ section.settings.border_color }};
+    border-radius: {{ section.settings.button_radius }}px;
+    font-size: 14px;
+  }
+
+  .search-vt-products-list-{{ block_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 2px solid {{ section.settings.border_color }};
+    border-radius: {{ section.settings.button_radius }}px;
+  }
+
+  .search-vt-product-item-{{ block_id }} {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .search-vt-product-item-{{ block_id }}:hover {
+    background-color: {{ section.settings.upload_hover_bg }};
+  }
+
+  .search-vt-product-item-{{ block_id }}.selected {
+    background-color: {{ section.settings.accent_color }}20;
+  }
+
+  .search-vt-checkbox-{{ block_id }} {
+    width: 18px;
+    height: 18px;
+    border: 2px solid {{ section.settings.border_color }};
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .search-vt-product-item-{{ block_id }}.selected .search-vt-checkbox-{{ block_id }} {
+    background-color: {{ section.settings.accent_color }};
+    border-color: {{ section.settings.accent_color }};
+  }
+
+  .search-vt-selected-{{ block_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .search-vt-tag-{{ block_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: {{ section.settings.accent_color }};
+    color: white;
+    border-radius: {{ section.settings.button_radius }}px;
+    font-size: 14px;
+  }
+
+  .search-vt-tag-remove-{{ block_id }} {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    color: white;
+  }
+
+  .search-vt-submit-{{ block_id }} {
+    padding: 16px 48px;
+    background-color: {{ section.settings.accent_color }};
+    color: white;
+    border: none;
+    border-radius: {{ section.settings.button_radius }}px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .search-vt-submit-{{ block_id }}:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .search-vt-submit-{{ block_id }}:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .search-vt-results-{{ block_id }} {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid {{ section.settings.border_color }};
+    display: none;
+  }
+
+  .search-vt-results-heading-{{ block_id }} {
+    font-size: 24px;
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    margin-bottom: 30px;
+  }
+
+  .search-vt-results-grid-{{ block_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .search-vt-result-item-{{ block_id }} {
+    background: white;
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .search-vt-result-item-{{ block_id }}:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateY(-4px);
+  }
+
+  .search-vt-result-image-{{ block_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .search-vt-result-actions-{{ block_id }} {
+    padding: 12px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .search-vt-download-button-{{ block_id }} {
+    flex: 1;
+    padding: 10px;
+    background-color: {{ section.settings.accent_color }};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .search-vt-download-button-{{ block_id }}:hover {
+    opacity: 0.9;
+  }
+
+  .search-vt-loading-{{ block_id }} {
+    text-align: center;
+    padding: 40px;
+    display: none;
+  }
+
+  .search-vt-spinner-{{ block_id }} {
+    width: 40px;
+    height: 40px;
+    border: 4px solid {{ section.settings.border_color }};
+    border-top-color: {{ section.settings.accent_color }};
+    border-radius: 50%;
+    animation: spin-{{ block_id }} 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin-{{ block_id }} {
+    to { transform: rotate(360deg); }
+  }
+
+  .search-vt-error-{{ block_id }} {
+    padding: 16px;
+    background-color: #fee;
+    border: 1px solid #fcc;
+    border-radius: {{ section.settings.button_radius }}px;
+    color: #c00;
+    margin: 16px 0;
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .search-vt-grid-{{ block_id }} {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .search-vt-size-grid-{{ block_id }} {
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+
+    .search-vt-results-grid-{{ block_id }} {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .search-vt-submit-{{ block_id }} {
+      width: 100%;
+    }
+  }
+{% endstyle %}
+
+<search-virtual-tryon-{{ block_id }} class="search-vt-{{ block_id }}" data-search-vt-section="{{ block_id }}">
+  <div class="search-vt-container-{{ block_id }}">
+    {% if section.settings.section_heading != blank %}
+      <h1 class="search-vt-section-heading-{{ block_id }}">{{ section.settings.section_heading }}</h1>
+    {% endif %}
+
+    <div class="search-vt-grid-{{ block_id }}">
+      <!-- Upload Section -->
+      <div class="search-vt-upload-{{ block_id }}">
+        <div>
+          <h2 class="search-vt-label-{{ block_id }}">{{ section.settings.upload_heading }}</h2>
+          <p style="color: {{ section.settings.subtext_color }}; font-size: 14px; margin: 0;">{{ section.settings.upload_subtext }}</p>
+        </div>
+
+        <div class="search-vt-upload-box-{{ block_id }}" data-upload-box>
+          <div data-upload-placeholder>
+            <svg class="search-vt-upload-icon-{{ block_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+            <p class="search-vt-upload-text-{{ block_id }}">{{ section.settings.drag_drop_text }}</p>
+            <button type="button" class="search-vt-button-{{ block_id }}" data-browse-button>
+              {{ section.settings.browse_button_text }}
+            </button>
+          </div>
+          <img class="search-vt-preview-{{ block_id }}" data-preview-image style="display: none;" alt="Uploaded photo">
+        </div>
+
+        <input type="file" class="search-vt-file-input-{{ block_id }}" accept="image/*" data-file-input>
+      </div>
+
+      <!-- Controls Section -->
+      <div class="search-vt-controls-{{ block_id }}">
+        <!-- Size Selection -->
+        <div class="search-vt-size-section-{{ block_id }}">
+          <label class="search-vt-label-{{ block_id }}">{{ section.settings.size_label }}</label>
+          <div class="search-vt-size-grid-{{ block_id }}" data-size-grid>
+            {% assign sizes = '0-3M,3-6M,6-9M,9-12M,12-18M,18-24M,2-3Y,3-4Y,4-5Y,5-6Y,6-7Y,7-8Y,8-9Y,9-10Y,10-11Y,11-12Y' | split: ',' %}
+            {% for size in sizes %}
+              <button type="button" class="search-vt-size-button-{{ block_id }}" data-size-button data-size="{{ size }}">
+                {{ size }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Product Search -->
+        <div class="search-vt-product-section-{{ block_id }}">
+          <label class="search-vt-label-{{ block_id }}">{{ section.settings.product_label }}</label>
+          <input type="text" class="search-vt-search-input-{{ block_id }}" placeholder="{{ section.settings.search_placeholder }}" data-product-search>
+          <div class="search-vt-products-list-{{ block_id }}" data-products-list>
+            <!-- Products loaded via JavaScript -->
+          </div>
+          <div class="search-vt-selected-{{ block_id }}" data-selected-tags></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="button" class="search-vt-submit-{{ block_id }}" disabled data-submit-button>
+      {{ section.settings.submit_button_text }}
+    </button>
+
+    <!-- Error Message -->
+    <div class="search-vt-error-{{ block_id }}" data-error-message></div>
+
+    <!-- Loading State -->
+    <div class="search-vt-loading-{{ block_id }}" data-loading-state>
+      <div class="search-vt-spinner-{{ block_id }}"></div>
+      <p>{{ section.settings.loading_message }}</p>
+    </div>
+
+    <!-- Results Section -->
+    <div class="search-vt-results-{{ block_id }}" data-results-section>
+      <h3 class="search-vt-results-heading-{{ block_id }}">{{ section.settings.results_heading }}</h3>
+      <div class="search-vt-results-grid-{{ block_id }}" data-results-grid></div>
+    </div>
+  </div>
+</search-virtual-tryon-{{ block_id }}>
+
+<script type="module">
+  import VirtualTryOnAPI from '{{ "virtual-tryon-api.js" | asset_url }}';
+
+  class SearchVirtualTryOn extends HTMLElement {
+    constructor() {
+      super();
+      this.sectionId = this.dataset.searchVtSection;
+      this.api = new VirtualTryOnAPI({
+        apiKey: '{{ api_key }}',
+        cloudinaryUploadPreset: '{{ section.settings.cloudinary_upload_preset }}',
+      });
+
+      this.state = {
+        image: null,
+        imageData: null,
+        size: null,
+        products: new Set(),
+        allProducts: [],
+      };
+    }
+
+    connectedCallback() {
+      this.setupElements();
+      this.loadProducts();
+      this.setupEventListeners();
+    }
+
+    setupElements() {
+      const q = (sel) => this.querySelector(sel);
+      this.uploadBox = q('[data-upload-box]');
+      this.uploadPlaceholder = q('[data-upload-placeholder]');
+      this.previewImage = q('[data-preview-image]');
+      this.fileInput = q('[data-file-input]');
+      this.browseButton = q('[data-browse-button]');
+      this.sizeButtons = this.querySelectorAll('[data-size-button]');
+      this.productSearch = q('[data-product-search]');
+      this.productsList = q('[data-products-list]');
+      this.selectedTags = q('[data-selected-tags]');
+      this.submitButton = q('[data-submit-button]');
+      this.errorMessage = q('[data-error-message]');
+      this.loadingState = q('[data-loading-state]');
+      this.resultsSection = q('[data-results-section]');
+      this.resultsGrid = q('[data-results-grid]');
+    }
+
+    loadProducts() {
+      // Get products from collection or shop
+      const products = Shopify?.products || [];
+      this.state.allProducts = products;
+      this.renderProductsList(products);
+    }
+
+    renderProductsList(products) {
+      this.productsList.innerHTML = '';
+      products.forEach((product) => {
+        const item = document.createElement('div');
+        item.className = 'search-vt-product-item-{{ block_id }}';
+        item.dataset.productId = product.id;
+        item.dataset.productTitle = product.title;
+        item.innerHTML = `
+          <div class="search-vt-checkbox-{{ block_id }}">
+            <svg width="12" height="12" fill="none" stroke="white" viewBox="0 0 24 24" style="display: none;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <span>${product.title}</span>
+        `;
+
+        item.addEventListener('click', () => this.toggleProduct(item, product));
+        this.productsList.appendChild(item);
+      });
+    }
+
+    toggleProduct(item, product) {
+      if (this.state.products.has(product.id)) {
+        this.state.products.delete(product.id);
+        item.classList.remove('selected');
+      } else {
+        this.state.products.add(product.id);
+        item.classList.add('selected');
+      }
+
+      this.updateSelectedTags();
+      this.updateSubmitButton();
+    }
+
+    setupEventListeners() {
+      // Upload handlers
+      this.browseButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.fileInput.click();
+      });
+
+      this.uploadBox.addEventListener('click', () => {
+        if (!this.state.image) {
+          this.fileInput.click();
+        }
+      });
+
+      this.uploadBox.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        this.uploadBox.style.borderColor = '#{{ section.settings.accent_color | remove: '#' }}';
+      });
+
+      this.uploadBox.addEventListener('dragleave', () => {
+        this.uploadBox.style.borderColor = '#{{ section.settings.border_color | remove: '#' }}';
+      });
+
+      this.uploadBox.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer.files.length > 0) {
+          this.handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      this.fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          this.handleFile(e.target.files[0]);
+        }
+      });
+
+      // Size selection
+      this.sizeButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          this.sizeButtons.forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          this.state.size = btn.dataset.size;
+          this.updateSubmitButton();
+        });
+      });
+
+      // Product search
+      this.productSearch.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = this.state.allProducts.filter((p) =>
+          p.title.toLowerCase().includes(term)
+        );
+        this.renderProductsList(filtered);
+        this.restoreSelectedState();
+      });
+
+      // Submit
+      this.submitButton.addEventListener('click', () => this.handleSubmit());
+    }
+
+    handleFile(file) {
+      if (!file.type.startsWith('image/')) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.state.imageData = e.target.result;
+        this.state.image = file.name;
+        this.previewImage.src = e.target.result;
+        this.previewImage.style.display = 'block';
+        this.uploadPlaceholder.style.display = 'none';
+        this.uploadBox.classList.add('has-image');
+        this.updateSubmitButton();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    updateSelectedTags() {
+      this.selectedTags.innerHTML = '';
+      this.state.products.forEach((id) => {
+        const product = this.state.allProducts.find((p) => p.id === id);
+        if (!product) return;
+
+        const tag = document.createElement('div');
+        tag.className = 'search-vt-tag-{{ block_id }}';
+        tag.innerHTML = `
+          <span>${product.title}</span>
+          <svg class="search-vt-tag-remove-{{ block_id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        `;
+
+        tag.querySelector('svg').addEventListener('click', () => {
+          this.state.products.delete(id);
+          const item = this.querySelector(`[data-product-id="${id}"]`);
+          if (item) item.classList.remove('selected');
+          this.updateSelectedTags();
+          this.updateSubmitButton();
+        });
+
+        this.selectedTags.appendChild(tag);
+      });
+    }
+
+    restoreSelectedState() {
+      this.productsList.querySelectorAll('[data-product-id]').forEach((item) => {
+        if (this.state.products.has(item.dataset.productId)) {
+          item.classList.add('selected');
+        }
+      });
+    }
+
+    updateSubmitButton() {
+      const valid = this.state.image && this.state.size && this.state.products.size > 0;
+      this.submitButton.disabled = !valid;
+    }
+
+    showError(message) {
+      this.errorMessage.textContent = message;
+      this.errorMessage.style.display = 'block';
+      setTimeout(() => {
+        this.errorMessage.style.display = 'none';
+      }, 5000);
+    }
+
+    async handleSubmit() {
+      this.submitButton.disabled = true;
+      this.loadingState.style.display = 'block';
+      this.resultsSection.style.display = 'none';
+
+      try {
+        const payload = {
+          image: this.state.imageData,
+          size: this.state.size,
+          products: Array.from(this.state.products),
+        };
+
+        const result = await this.api.generateVirtualTryOn(payload);
+        this.displayResults(result.images || []);
+      } catch (error) {
+        this.showError(error.message || 'Failed to generate virtual try-on');
+      } finally {
+        this.loadingState.style.display = 'none';
+        this.submitButton.disabled = false;
+      }
+    }
+
+    displayResults(images) {
+      this.resultsGrid.innerHTML = '';
+
+      images.forEach((img, index) => {
+        const item = document.createElement('div');
+        item.className = 'search-vt-result-item-{{ block_id }}';
+        const imageUrl = img.url || img;
+        item.innerHTML = `
+          <img src="${imageUrl}" alt="Result ${index + 1}" class="search-vt-result-image-{{ block_id }}">
+          <div class="search-vt-result-actions-{{ block_id }}">
+            <button class="search-vt-download-button-{{ block_id }}" data-download="${imageUrl}">
+              Download
+            </button>
+          </div>
+        `;
+
+        item.querySelector('[data-download]').addEventListener('click', (e) => {
+          this.downloadImage(e.target.dataset.download);
+        });
+
+        this.resultsGrid.appendChild(item);
+
+        // Upload to Cloudinary in background (non-blocking)
+        this.archiveToCloudinary(imageUrl, index);
+      });
+
+      this.resultsSection.style.display = 'block';
+    }
+
+    async archiveToCloudinary(imageUrl, index) {
+      try {
+        await this.api.uploadToCloudinary(imageUrl, `virtual-tryon-${Date.now()}-${index}.png`);
+      } catch (error) {
+        console.log('Background archiving skipped:', error);
+      }
+    }
+
+    downloadImage(url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `virtual-tryon-${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+
+  customElements.define(`search-virtual-tryon-{{ block_id }}`, SearchVirtualTryOn);
+</script>
+
+{% schema %}
+{
+  "name": "Search with Virtual Try-On",
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_key",
+      "label": "Fash.AI API Key"
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_upload_preset",
+      "label": "Cloudinary Upload Preset",
+      "info": "Create an unsigned upload preset in your Cloudinary dashboard (Settings > Upload)",
+      "default": "virtual_tryon"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section heading",
+      "default": "Virtual Try-On with Product Search"
+    },
+    {
+      "type": "header",
+      "content": "Upload Section"
+    },
+    {
+      "type": "text",
+      "id": "upload_heading",
+      "label": "Upload heading",
+      "default": "Upload Your Photo"
+    },
+    {
+      "type": "text",
+      "id": "upload_subtext",
+      "label": "Upload subtext",
+      "default": "Clear front-facing photo works best"
+    },
+    {
+      "type": "text",
+      "id": "drag_drop_text",
+      "label": "Drag & drop text",
+      "default": "Drag & drop your photo here"
+    },
+    {
+      "type": "text",
+      "id": "browse_button_text",
+      "label": "Browse button text",
+      "default": "Browse Files"
+    },
+    {
+      "type": "header",
+      "content": "Size Selection"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size label",
+      "default": "Select Size"
+    },
+    {
+      "type": "header",
+      "content": "Product Search"
+    },
+    {
+      "type": "text",
+      "id": "product_label",
+      "label": "Product label",
+      "default": "Search & Select Products"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search products by name..."
+    },
+    {
+      "type": "header",
+      "content": "Buttons & Messages"
+    },
+    {
+      "type": "text",
+      "id": "submit_button_text",
+      "label": "Submit button text",
+      "default": "Generate Virtual Try-On"
+    },
+    {
+      "type": "text",
+      "id": "loading_message",
+      "label": "Loading message",
+      "default": "Generating your virtual try-on..."
+    },
+    {
+      "type": "text",
+      "id": "results_heading",
+      "label": "Results heading",
+      "default": "Your Virtual Try-Ons"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#1f2937"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext",
+      "default": "#6b7280"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#c2185b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "color",
+      "id": "upload_bg_color",
+      "label": "Upload background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "upload_hover_bg",
+      "label": "Upload hover",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "color",
+      "id": "size_bg_color",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search with Virtual Try-On"
+    }
+  ]
+}
+{% endschema %}
