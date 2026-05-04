@@ -1,7 +1,7 @@
 class VirtualTryOnAPI {
   constructor(options = {}) {
     this.apiKey = options.apiKey || this.getApiKeyFromMeta();
-    this.apiBaseUrl = options.apiBaseUrl || 'https://api.fashn.ai/v1';
+    this.apiBaseUrl = options.apiBaseUrl || 'https://n8n.tdwebsites.in/webhook/shopify-tryon';
     this.timeout = options.timeout || 30000;
     this.cloudinaryCloudName = options.cloudinaryCloudName || '386471482775984';
     this.cloudinaryUploadPreset = options.cloudinaryUploadPreset || 'virtual_tryon';
