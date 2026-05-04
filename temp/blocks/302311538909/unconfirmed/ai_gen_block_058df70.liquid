@@ -1,6 +1,34 @@
+{% doc %}
+  @prompt
+    Add custom CSS using media queries to make the heading text "Like Mother, Like Daughter - Styled in Magic ✨" in the product hotspots section display at 24px font size on mobile devices, and at Heading 2 size on desktop screens. Target the heading block with ID "template--22263221649629__product_hotspots_RzCyE8__heading" inside section "template--22263221649629__product_hotspots_RzCyE8". Use a media query breakpoint of min-width: 750px to switch between mobile and desktop typography.
+{% enddoc %}
+{% style %}
+  #template--22263221649629__product_hotspots_RzCyE8__heading {
+    font-size: 24px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #template--22263221649629__product_hotspots_RzCyE8__heading {
+      font-size: 40px;
+    }
+  }
+{% endstyle %}
+
+<div {{ block.shopify_attributes }}></div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Custom CSS",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This block applies custom CSS to make the heading 'Like Mother, Like Daughter - Styled in Magic ✨' display at 24px on mobile and 40px (H2 size) on desktop (min-width: 750px)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom CSS"
+    }
+  ]
+}
 {% endschema %}
