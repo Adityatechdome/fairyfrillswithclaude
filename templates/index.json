@@ -44,7 +44,7 @@
       "name": "our newest collection : hero",
       "settings": {
         "media_type_1": "video",
-        "video_1": "shopify://files/videos/make_it_with_more_finish_202604290148.mp4",
+        "video_1": "shopify://files/videos/hero.mp4",
         "media_type_2": "image",
         "stack_media_on_mobile": true,
         "custom_mobile_media": true,
@@ -186,8 +186,8 @@
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_size": "1.5rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
+            "line_height": "tight",
+            "letter_spacing": "tight",
             "case": "none",
             "wrap": "pretty",
             "color": "var(--color-foreground)",
@@ -1165,6 +1165,46 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "1777876793bfbb436b": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_058df70_TeJcpr": {
+          "type": "ai_gen_block_058df70",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_058df70_TeJcpr"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
@@ -1177,6 +1217,7 @@
     "product_list_tc6z3D",
     "section_rtnGCf",
     "ss_gallery_7_2f8416_CPxDRN",
-    "177748914759fc636b"
+    "177748914759fc636b",
+    "1777876793bfbb436b"
   ]
 }
