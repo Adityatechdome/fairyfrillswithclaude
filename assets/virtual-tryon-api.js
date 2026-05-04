@@ -18,7 +18,7 @@ class VirtualTryOnAPI {
     }
 
     try {
-      const response = await this.fetchWithTimeout(`${this.apiBaseUrl}/virtual-tryon/generate`, {
+      const response = await this.fetchWithTimeout(`${this.apiBaseUrl}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
