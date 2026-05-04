@@ -44,7 +44,7 @@
       "name": "our newest collection : hero",
       "settings": {
         "media_type_1": "video",
-        "video_1": "shopify://files/videos/hero.mp4",
+        "video_1": "shopify://files/videos/hero final.mp4",
         "media_type_2": "image",
         "stack_media_on_mobile": true,
         "custom_mobile_media": true,
