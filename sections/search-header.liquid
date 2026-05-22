@@ -1,4 +1,6 @@
-
+{% render 'predictive-search-styles' %}
+{% render 'slideshow-styles' %}
+{% render 'search-modal' %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div class="section section--page-width color-{{ section.settings.color_scheme }}">
@@ -20,7 +22,17 @@
     {% endcapture %}
 
     {% content_for 'block', id: 'heading', type: '_heading', text: heading_text %}
-    {% content_for 'block', id: 'search', type: '_search-input' %}
+    <button
+  on:click="#search-modal/showDialog"
+  class="button-unstyled"
+  aria-label="{{ 'content.search_input_label' | t }}"
+  aria-haspopup="dialog"
+>
+  <span class="svg-wrapper">
+    {{ 'icon-search.svg' | inline_asset_content }}
+  </span>
+  {{ 'content.search' | t }}
+</button>
   </div>
 </div>
 
