@@ -6,9 +6,11 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
-	<!-- Added by APP PLAZA -->
-	{% include 'app-plaza' %}
-	<!-- /Added by APP PLAZA -->
+<!-- Added by APP PLAZA -->
+{% unless template.name == 'search' %}
+  {% include 'app-plaza' %}
+{% endunless %}
+<!-- /Added by APP PLAZA -->
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
