@@ -42,14 +42,18 @@
               "type": "_product-card-group",
               "settings": {
                 "content_direction": "column",
-                "gap": 4
+                "gap": 4,
+                "width": "fill",
+                "height": "fit"
               },
               "blocks": {
                 "product_title": {
                   "type": "product-title",
                   "settings": {
                     "alignment": "left",
-                    "type_preset": "h5"
+                    "type_preset": "h5",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem"
                   },
                   "blocks": {}
                 },
@@ -57,7 +61,10 @@
                   "type": "price",
                   "settings": {
                     "show_sale_price_first": true,
-                    "alignment": "left"
+                    "type_preset": "h6",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem"
                   },
                   "blocks": {}
                 }
