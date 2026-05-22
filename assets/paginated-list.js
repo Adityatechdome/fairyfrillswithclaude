@@ -187,9 +187,9 @@ export default class PaginatedList extends Component {
       if (!nextPageItemElements) return;
     }
 
-    grid.append(...nextPageItemElements);
+grid.append(...nextPageItemElements);
 
-    this.#aspectRatioHelper.processNewElements();
+this.#aspectRatioHelper?.processNewElements();
 
     history.pushState('', '', nextPage.url.toString());
 
@@ -226,9 +226,9 @@ export default class PaginatedList extends Component {
     const oldHeight = firstElement ? firstElement.getBoundingClientRect().top + window.scrollY : 0;
 
     // Prepend the new elements
-    grid.prepend(...previousPageItemElements);
+grid.prepend(...previousPageItemElements);
 
-    this.#aspectRatioHelper.processNewElements();
+this.#aspectRatioHelper?.processNewElements();
 
     history.pushState('', '', previousPage.url.toString());
 
