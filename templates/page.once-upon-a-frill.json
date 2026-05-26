@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "once_upon_a_frill": {
+      "type": "once-upon-a-frill",
+      "settings": {}
+    }
+  },
+  "order": [
+    "once_upon_a_frill"
+  ]
+}

@@ -1,0 +1,31 @@
+{{ 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap' | stylesheet_tag }}
+
+<style>
+  #ff-rts-root { margin: 0; padding: 0; }
+  #ff-rts-root, #ff-rts-root * { box-sizing: border-box; }
+</style>
+
+<div id="ff-rts-root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="{{ 'ff-rts-shared.js' | asset_url }}" data-presets="react"></script>
+<script type="text/babel" src="{{ 'ff-rts-style.js' | asset_url }}" data-presets="react"></script>
+<script type="text/babel" src="{{ 'ff-rts-page.js' | asset_url }}" data-presets="react"></script>
+<script type="text/babel" src="{{ 'ff-rts-app.js' | asset_url }}" data-presets="react"></script>
+
+{% schema %}
+{
+  "name": "Once Upon a Frill",
+  "tag": "div",
+  "class": "ff-rts-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Once Upon a Frill"
+    }
+  ]
+}
+{% endschema %}
